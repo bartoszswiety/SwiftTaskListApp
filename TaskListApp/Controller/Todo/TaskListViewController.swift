@@ -14,8 +14,8 @@ class TasksLitViewController: UITableViewController
     let todoController = TodoController.shared
 
     override func viewDidLoad() {
-        view.backgroundColor = .systemBackground
-        title = "Tasks"
+        view.backgroundColor = .systemIndigo
+        title = "Todo"
         todoController.addTask(title: "SIema")
     }
 
@@ -24,8 +24,9 @@ class TasksLitViewController: UITableViewController
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         let cell = TaskViewCell()
-        cell.style()
+        cell.todo = todoController.todos[indexPath.item]
         return cell
     }
 }
