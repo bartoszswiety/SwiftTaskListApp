@@ -12,6 +12,11 @@ import CoreData
 @objc(Todo)
 public class Todo: NSManagedObject {
 
+    convenience init(title: String)
+    {
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
+        self.setValue(title, forKey: "title")
+    }
 }
 extension Todo {
 
@@ -27,3 +32,5 @@ extension Todo {
     @NSManaged public var test: Float
 
 }
+
+

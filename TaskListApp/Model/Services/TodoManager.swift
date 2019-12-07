@@ -22,40 +22,26 @@ public class TodoController: NSObject
 
     func loadTodosFromCoreData()
     {
-//        print("loading")
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-//            return
-//        }
-//
-//        let managedContext = appDelegate.persistentContainer.viewContext
-//        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Todo")
-//
-//        do {
-//            todos = try managedContext.fetch(fetchRequest) as! [Todo]
-//            print("loaded")
-//        } catch let error as NSError {
-//            print("Could not fetch. \(error), \(error.userInfo)")
-//        }
-    }
-
-    func Add(todo: Todo)
-    {
-
-    }
-
-    func save(name: String) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
+        let request = NSFetchRequest<Todo>(entityName: "Todo")
+        do
+        {
+            todos = try CoreDataStack.contex.fetch(request)
         }
+        catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
 
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
-        let person = NSManagedObject(entity: entity, insertInto: managedContext)
-        person.setValue(name, forKeyPath: "name")
+    func addTask(title: String)
+    {
+        self.todos.append(Todo(title: title))
+        save()
+    }
 
+    func save()
+    {
         do {
-            try managedContext.save()
-            people.append(person)
+            try CoreDataStack.contex.save()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
