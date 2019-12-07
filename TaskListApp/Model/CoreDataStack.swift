@@ -13,7 +13,11 @@ public class CoreDataStack
 {
 
     static let shared = CoreDataStack()
-
+    static var contex: NSManagedObjectContext {
+        get {
+            return shared.persistentContainer.viewContext
+        }
+    }
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {

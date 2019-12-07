@@ -7,17 +7,20 @@
 //
 
 import Foundation
-import UIkit
+import UIKit
 
 class TasksLitViewController: UITableViewController
 {
+    let todoController = TodoController.shared
+
     override func viewDidLoad() {
         view.backgroundColor = .systemBackground
         title = "Tasks"
+        todoController.addTask(title: "SIema")
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
+        todoController.todos.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

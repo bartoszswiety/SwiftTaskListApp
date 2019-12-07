@@ -10,6 +10,7 @@
 		78614CA653094D301EC9FFBC /* Pods_TaskListApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 887162850D7251A7AFEE70F2 /* Pods_TaskListApp.framework */; };
 		A015B4ACFDD172C0EA3FE4CD /* Pods_TaskListAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F60B3FA06DEE0D2E083645E0 /* Pods_TaskListAppTests.framework */; };
 		B13E3B1741AE872802C486B8 /* Pods_TaskListApp_TaskListAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1996F5D2873590803E9B9B31 /* Pods_TaskListApp_TaskListAppUITests.framework */; };
+		D123C77A239C1B700037DEB3 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D123C779239C1B700037DEB3 /* CoreDataStack.swift */; };
 		D1801CBB2398F339008A46AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1801CBA2398F339008A46AF /* AppDelegate.swift */; };
 		D1801CBD2398F339008A46AF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1801CBC2398F339008A46AF /* SceneDelegate.swift */; };
 		D1801CC02398F339008A46AF /* TaskListApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D1801CBE2398F339008A46AF /* TaskListApp.xcdatamodeld */; };
@@ -22,6 +23,8 @@
 		D1FF61A9239ABD7900FEBBA4 /* TasksNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61A8239ABD7900FEBBA4 /* TasksNavigationController.swift */; };
 		D1FF61AC239ABDB600FEBBA4 /* TaskListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61AB239ABDB600FEBBA4 /* TaskListViewController.swift */; };
 		D1FF61AE239ABE0200FEBBA4 /* TaskViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61AD239ABE0200FEBBA4 /* TaskViewCell.swift */; };
+		D1FF61B0239ABE5800FEBBA4 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61AF239ABE5800FEBBA4 /* Todo.swift */; };
+		D1FF61B7239AC0FF00FEBBA4 /* TodoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61B6239AC0FF00FEBBA4 /* TodoManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,7 @@
 		60B52E846F3E26AE0DD64BF2 /* Pods-TaskListAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskListAppTests.debug.xcconfig"; path = "Target Support Files/Pods-TaskListAppTests/Pods-TaskListAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7FD56F8C070F21AE1CAA4B6D /* Pods-TaskListApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskListApp.debug.xcconfig"; path = "Target Support Files/Pods-TaskListApp/Pods-TaskListApp.debug.xcconfig"; sourceTree = "<group>"; };
 		887162850D7251A7AFEE70F2 /* Pods_TaskListApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaskListApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D123C779239C1B700037DEB3 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		D1801CB72398F339008A46AF /* TaskListApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskListApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1801CBA2398F339008A46AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D1801CBC2398F339008A46AF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +72,8 @@
 		D1FF61A8239ABD7900FEBBA4 /* TasksNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksNavigationController.swift; sourceTree = "<group>"; };
 		D1FF61AB239ABDB600FEBBA4 /* TaskListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListViewController.swift; sourceTree = "<group>"; };
 		D1FF61AD239ABE0200FEBBA4 /* TaskViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewCell.swift; sourceTree = "<group>"; };
+		D1FF61AF239ABE5800FEBBA4 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		D1FF61B6239AC0FF00FEBBA4 /* TodoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoManager.swift; sourceTree = "<group>"; };
 		F60B3FA06DEE0D2E083645E0 /* Pods_TaskListAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaskListAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -198,7 +204,10 @@
 		D1FF61A1239ABC7200FEBBA4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D1FF61B5239AC09600FEBBA4 /* Services */,
+				D1FF61B3239ABF7A00FEBBA4 /* DataModel */,
 				D1FF61A4239ABC9000FEBBA4 /* Networking */,
+				D123C779239C1B700037DEB3 /* CoreDataStack.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -242,6 +251,22 @@
 				D1FF61AB239ABDB600FEBBA4 /* TaskListViewController.swift */,
 			);
 			path = Todo;
+			sourceTree = "<group>";
+		};
+		D1FF61B3239ABF7A00FEBBA4 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				D1FF61AF239ABE5800FEBBA4 /* Todo.swift */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
+		D1FF61B5239AC09600FEBBA4 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				D1FF61B6239AC0FF00FEBBA4 /* TodoManager.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -508,7 +533,10 @@
 				D1801CC02398F339008A46AF /* TaskListApp.xcdatamodeld in Sources */,
 				D1FF619F239ABC4600FEBBA4 /* R.generated.swift in Sources */,
 				D1801CBB2398F339008A46AF /* AppDelegate.swift in Sources */,
+				D123C77A239C1B700037DEB3 /* CoreDataStack.swift in Sources */,
 				D1FF61AC239ABDB600FEBBA4 /* TaskListViewController.swift in Sources */,
+				D1FF61B0239ABE5800FEBBA4 /* Todo.swift in Sources */,
+				D1FF61B7239AC0FF00FEBBA4 /* TodoManager.swift in Sources */,
 				D1801CBD2398F339008A46AF /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

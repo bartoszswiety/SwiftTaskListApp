@@ -12,10 +12,11 @@ import UIKit
 public class TasksNavigationController: UINavigationController
 {
 
+
     public override func viewDidLoad() {
 
 
-        let v = TaskLitViewController()
+        let v = TasksLitViewController()
         setViewControllers([v], animated: true)
 
         navigationBar.setBackgroundImage(UIImage(), for: .default)
