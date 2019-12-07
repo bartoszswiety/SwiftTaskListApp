@@ -18,11 +18,13 @@ public class TasksNavigationController: UINavigationController
 
         let v = TasksLitViewController()
         setViewControllers([v], animated: true)
+        navigationBar.backgroundColor = .systemIndigo
+        view.backgroundColor = .systemIndigo
+        navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+//        navigationBar.setBackgroundImage(UIImage(), for: .default)
+//        navigationBar.shadowImage = UIImage()
+//        navigationBar.isTranslucent = true
 
-        navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationBar.shadowImage = UIImage()
-        navigationBar.isTranslucent = true
-        view.backgroundColor = UIColor.clear
         navigationBar.prefersLargeTitles = true
         self.navigationItem.largeTitleDisplayMode = .always
         self.navigationBar.setTitleVerticalPositionAdjustment(200, for: .default)
