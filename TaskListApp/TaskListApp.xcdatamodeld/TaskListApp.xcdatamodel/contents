@@ -7,8 +7,19 @@
         <attribute name="test" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TodoItem" inverseName="todo" inverseEntity="TodoItem"/>
+    </entity>
+    <entity name="TodoItem" representedClassName="TodoItem" syncable="YES">
+        <attribute name="created_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="done" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="todo_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="updated_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="todo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Todo" inverseName="items" inverseEntity="Todo"/>
     </entity>
     <elements>
-        <element name="Todo" positionX="-3717.09375" positionY="-2757.109375" width="128" height="133"/>
+        <element name="TodoItem" positionX="-229.38671875" positionY="167.09765625" width="128" height="148"/>
+        <element name="Todo" positionX="162.29296875" positionY="354.3046875" width="128" height="148"/>
     </elements>
 </model>
