@@ -9,14 +9,12 @@
 import Foundation
 import UIKit
 
-protocol AddButtonDelegate
-{
+protocol AddButtonDelegate {
     func onClickAddButton()
 }
 
-class AddButton: UIButton
-{
-    var delegate: AddButtonDelegate? = nil
+class AddButton: UIButton {
+    var delegate: AddButtonDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         setTitle("+", for: .normal)
@@ -25,19 +23,17 @@ class AddButton: UIButton
         addTarget(self, action: #selector(click), for: .touchUpInside)
     }
 
-    @objc func click()
-    {
+    @objc func click() {
         delegate?.onClickAddButton()
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private var gradient: CAGradientLayer? = nil
+    private var gradient: CAGradientLayer?
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        self.gradient?.frame = self.bounds
+        gradient?.frame = bounds
     }
-
 }

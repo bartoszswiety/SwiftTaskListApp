@@ -9,24 +9,20 @@
 import Foundation
 import UIKit
 
-protocol EditableTextDelegate
-{
+protocol EditableTextDelegate {
     func onTextEdited(text: String)
     func onClick()
 }
 
-
-
-class EditableText: UIView, UITextFieldDelegate
-{
-    enum Style
-    {
+class EditableText: UIView, UITextFieldDelegate {
+    enum Style {
         case normal
         case whiteBold
     }
-    public static var singleton: EditableText? = nil
 
-    var delegate: EditableTextDelegate? = nil
+    public static var singleton: EditableText?
+
+    var delegate: EditableTextDelegate?
     private var _text: String = ""
 
     private var button: UIButton = {
@@ -37,55 +33,45 @@ class EditableText: UIView, UITextFieldDelegate
 
     private var textField: UITextField?
 
-
-
     init(style: Style = .normal) {
         super.init(frame: CGRect.zero)
         addSubview(button)
         button.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0, enableInsets: false)
         button.addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
 
-        if(style == .whiteBold)
-        {
+        if style == .whiteBold {
             button.titleLabel?.font = .systemFont(ofSize: 27, weight: .bold)
             button.titleLabel?.textColor = .white
-        }
-        else
-        {
+        } else {
             button.setTitleColor(.label, for: .normal)
         }
 
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress))
         button.addGestureRecognizer(longGesture)
     }
-    func enterMode()
-    {
 
+    func enterMode() {
         EditableText.singleton?.hideTextField()
         EditableText.singleton = self
         button.isHidden = true
         createTextField()
     }
 
-    @objc func onButtonClick()
-    {
-        if(EditableText.singleton != self)
-        {
+    @objc func onButtonClick() {
+        if EditableText.singleton != self {
             delegate?.onClick()
         }
     }
-    @objc func onLongPress()
-    {
-        if(EditableText.singleton != self)
-        {
+
+    @objc func onLongPress() {
+        if EditableText.singleton != self {
             let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
             selectionFeedbackGenerator.selectionChanged()
             enterMode()
         }
     }
 
-    private func createTextField()
-    {
+    private func createTextField() {
         print("nyc")
         textField = UITextField()
         button.isHidden = true
@@ -101,27 +87,25 @@ class EditableText: UIView, UITextFieldDelegate
         textField!.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0, enableInsets: false)
     }
 
-    func hideTextField()
-    {
-        self.textField?.removeFromSuperview()
+    func hideTextField() {
+        textField?.removeFromSuperview()
         button.isHidden = false
-        self.textField = nil
+        textField = nil
 
         EditableText.singleton = nil
     }
-    func setText(text: String)
-    {
-        if(text == "unnamed")
-        {
+
+    func setText(text: String) {
+        if text == "unnamed" {
             setText(text: "")
             enterMode()
         }
 
-        self._text = text
+        _text = text
         button.setTitle(text, for: .normal)
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         setText(text: textField.text!)
         print("done")
         textField.resignFirstResponder()
@@ -130,7 +114,7 @@ class EditableText: UIView, UITextFieldDelegate
         return true
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

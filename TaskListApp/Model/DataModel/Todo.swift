@@ -6,24 +6,20 @@
 //  Copyright © 2019 Bartosz Swiety. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 @objc(Todo)
 public class Todo: NSManagedObject {
-
-
-    convenience init(title: String)
-    {
+    convenience init(title: String) {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
-        self.setValue(title, forKey: "title")
-        self.setValue(NSDate(), forKey: "created_at")
-        self.setValue(NSDate(), forKey: "updated_at")
+        setValue(title, forKey: "title")
+        setValue(NSDate(), forKey: "created_at")
+        setValue(NSDate(), forKey: "updated_at")
     }
 }
 
 extension Todo {
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Todo> {
         return NSFetchRequest<Todo>(entityName: "Todo")
     }
@@ -35,11 +31,9 @@ extension Todo {
     @NSManaged public var title: String?
     @NSManaged public var updated_at: Date?
     @NSManaged public var items: NSSet?
-
 }
 
 extension Todo {
-
     @objc(addItemsObject:)
     @NSManaged private func addToItems(_ value: TodoItem)
 
@@ -51,41 +45,33 @@ extension Todo {
 
     @objc(removeItems:)
     @NSManaged public func removeFromItems(_ values: NSSet)
-
 }
 
-extension Todo
-{
-
-    public var todoItems: [TodoItem]
-    {
+extension Todo {
+    public var todoItems: [TodoItem] {
         return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
-            return item1.created_at > item2.created_at
+            item1.created_at > item2.created_at
         }
     }
 
-    public var doneItems: [TodoItem]
-    {
+    public var doneItems: [TodoItem] {
         return todoItems.filter { (item) -> Bool in
-            return item.done
+            item.done
         }
     }
 
-    func rename(title: String)
-    {
+    func rename(title: String) {
         self.title = title
         setValue(title, forKey: "title")
         TodoManager.shared.save()
     }
 
-    func createItem()
-    {
+    func createItem() {
         addToItems(TodoItem(name: "unnamed"))
         TodoManager.shared.save()
     }
 
-    func removeItem(index: Int)
-    {
+    func removeItem(index: Int) {
         removeFromItems(todoItems[index])
         TodoManager.shared.save()
     }
