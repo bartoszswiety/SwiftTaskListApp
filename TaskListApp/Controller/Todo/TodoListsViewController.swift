@@ -10,19 +10,30 @@ import Foundation
 import UIKit
 
 
-class TodoListViewController: UITableViewController, AddButtonDelegate
+class TodoListViewController: UITableViewController, AddButtonDelegate, TodoViewCellDelegate
 {
+
+    let todoController: TodoManager = TodoManager.shared
+    func onTodoClick(todo: Todo?) {
+        self.navigationController?.pushViewController(TodoItemsListViewController(), animated: true)
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            todoController.deleteTodo(index: indexPath.item)
+            tableView.reloadData(with: .fade)
+        }
+    }
+
     func onClickAddButton() {
         todoController.createTodo()
         if(todoController.todos.count > 5)
         {
             todoController.dropAll()
         }
-        tableView.reloadData()
+        tableView.reloadData(with: .fade)
     }
 
-
-    let todoController: TodoManager = TodoManager.shared
 
     let addButton: AddButton = AddButton()
 
@@ -49,14 +60,11 @@ class TodoListViewController: UITableViewController, AddButtonDelegate
         100
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.navigationController?.pushViewController(TodoItemsListViewController(), animated: true)
-    }
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = TodoViewCell()
         cell.todo = todoController.todos[indexPath.item]
+        cell.delegate = self
         return cell
     }
 
@@ -64,4 +72,6 @@ class TodoListViewController: UITableViewController, AddButtonDelegate
     {
         TodoManager.shared.createTodo()
     }
+
+
 }

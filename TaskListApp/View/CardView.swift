@@ -19,8 +19,6 @@ class CardView: UIView
         gradient = createStyledGradient(colors: (UIColor.init(named: "CardColorA")!, UIColor.init(named: "CardColorB")!), radius: 10, shadow: true)
         addSubview(countsLabel)
         countsLabel.anchor(top: nil, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right * 2, width: 0, height: 50, enableInsets: false)
-
-
         addSubview(editableLabel)
         editableLabel.anchor(top: nil, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: layoutMargins.left, paddingBottom: 0, paddingRight: layoutMargins.right, width: 0, height: 50, enableInsets: false)
     }

@@ -12,6 +12,7 @@ import UIKit
 protocol EditableTextDelegate
 {
     func onTextEdited(text: String)
+    func onClick()
 }
 
 class EditableText: UIView, UITextFieldDelegate
@@ -35,12 +36,38 @@ class EditableText: UIView, UITextFieldDelegate
         button.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0, enableInsets: false)
         button.addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 27, weight: .bold)
+
+        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress))
+        button.addGestureRecognizer(longGesture)
     }
-    @objc func onButtonClick()
+    func enterMode()
     {
 
         EditableText.singleton?.hideTextField()
         EditableText.singleton = self
+        button.isHidden = true
+        createTextField()
+    }
+
+    @objc func onButtonClick()
+    {
+        if(EditableText.singleton != self)
+        {
+            delegate?.onClick()
+        }
+    }
+    @objc func onLongPress()
+    {
+        if(EditableText.singleton != self)
+        {
+            let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
+            selectionFeedbackGenerator.selectionChanged()
+            enterMode()
+        }
+    }
+
+    private func createTextField()
+    {
         print("nyc")
         textField = UITextField()
         button.isHidden = true
@@ -68,7 +95,7 @@ class EditableText: UIView, UITextFieldDelegate
         if(text == "unnamed")
         {
             setText(text: "")
-            onButtonClick()
+            enterMode()
         }
 
         self.text = text
