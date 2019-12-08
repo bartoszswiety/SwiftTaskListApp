@@ -21,8 +21,8 @@ class CardView: UIView
         countsLabel.anchor(top: nil, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right * 2, width: 0, height: 50, enableInsets: false)
 
 
-        addSubview(titleLabel)
-        titleLabel.anchor(top: nil, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: layoutMargins.left, paddingBottom: 0, paddingRight: layoutMargins.right, width: 0, height: 50, enableInsets: false)
+        addSubview(editableLabel)
+        editableLabel.anchor(top: nil, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: layoutMargins.left, paddingBottom: 0, paddingRight: layoutMargins.right, width: 0, height: 50, enableInsets: false)
     }
 
     let countsLabel: UILabel = {
@@ -33,14 +33,17 @@ class CardView: UIView
         return lbl
     } ()
 
-    let titleLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "Project"
-        lbl.textColor = .white
-        lbl.font = .systemFont(ofSize: 30, weight: .bold)
+    let editableLabel: EditableText = {
+        let lbl = EditableText()
+        lbl.setText(text: "Project")
         return lbl
     } ()
 
+    func setTitle(text: String)
+    {
+        editableLabel.hideTextField()
+        editableLabel.setText(text: text)
+    }
     private var gradient: CAGradientLayer? = nil
 
     override func layoutSublayers(of layer: CALayer) {

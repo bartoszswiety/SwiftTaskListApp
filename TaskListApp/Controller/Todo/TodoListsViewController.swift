@@ -13,7 +13,12 @@ import UIKit
 class TodoListViewController: UITableViewController, AddButtonDelegate
 {
     func onClickAddButton() {
-        print("siema")
+        todoController.createTodo()
+        if(todoController.todos.count > 5)
+        {
+            todoController.dropAll()
+        }
+        tableView.reloadData()
     }
 
 
@@ -37,7 +42,7 @@ class TodoListViewController: UITableViewController, AddButtonDelegate
 
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        todoController.todos.count
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -51,12 +56,12 @@ class TodoListViewController: UITableViewController, AddButtonDelegate
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = TodoViewCell()
-//        cell.todo = todoController.todos[indexPath.item]
+        cell.todo = todoController.todos[indexPath.item]
         return cell
     }
 
     @objc func addButonClicked()
     {
-
+        TodoManager.shared.createTodo()
     }
 }
