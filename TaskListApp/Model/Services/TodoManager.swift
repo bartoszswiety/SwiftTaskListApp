@@ -6,59 +6,46 @@
 //  Copyright © 2019 Bartosz Swiety. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 import UIKit
 
-public class TodoManager: NSObject
-{
+public class TodoManager: NSObject {
     public static var shared: TodoManager = TodoManager()
     public var todos: [Todo] = []
 
     public override init() {
         super.init()
-        self.loadTodosFromCoreData()
+        loadTodosFromCoreData()
     }
 
-    func loadTodosFromCoreData()
-    {
+    func loadTodosFromCoreData() {
         let request = NSFetchRequest<Todo>(entityName: "Todo")
-        do
-        {
+        do {
             todos = try CoreDataStack.contex.fetch(request)
-        }
-        catch let error as NSError {
+        } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
     }
 
-    func removeTodo(index: Int)
-    {
-        if let todo: Todo = self.todos[index]
-        {
-            do
-            {
+    func removeTodo(index: Int) {
+        if let todo: Todo = self.todos[index] {
+            do {
                 CoreDataStack.contex.delete(todo)
-            }
-            catch {
-
-            }
+            } catch {}
             todos.remove(at: index)
         }
         save()
     }
 
-    func createTodo()
-    {
-        self.todos.insert(Todo(title: "unnamed"), at: 0)
+    func createTodo() {
+        todos.insert(Todo(title: "unnamed"), at: 0)
         save()
     }
 
-    func dropAll()
-    {
+    func dropAll() {
         todos = []
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Todo")
-
 
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
 
@@ -68,11 +55,9 @@ public class TodoManager: NSObject
         } catch {
             // Error Handling
         }
-
     }
 
-    func save()
-    {
+    func save() {
         do {
 //            CoreDataStack.contex.c
             try CoreDataStack.contex.save()

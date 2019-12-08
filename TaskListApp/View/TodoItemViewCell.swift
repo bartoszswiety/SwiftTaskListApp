@@ -9,13 +9,10 @@
 import Foundation
 import UIKit
 
-class TodoItemViewCell: UITableViewCell
-{
-    public var todoItem: TodoItem?
-    {
-        didSet
-        {
-            editableLabel.setText(text: self.todoItem?.name ?? "")
+class TodoItemViewCell: UITableViewCell {
+    public var todoItem: TodoItem? {
+        didSet {
+            editableLabel.setText(text: todoItem?.name ?? "")
             showStatus()
         }
     }
@@ -30,8 +27,7 @@ class TodoItemViewCell: UITableViewCell
         return button
     }()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?)
-    {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         addSubview(checkButton)
@@ -44,55 +40,42 @@ class TodoItemViewCell: UITableViewCell
         editableLabel.delegate = self
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension TodoItemViewCell: EditableTextDelegate
-{
+extension TodoItemViewCell: EditableTextDelegate {
     func onTextEdited(text: String) {
-        self.todoItem?.rename(name: text)
+        todoItem?.rename(name: text)
     }
 
     func onClick() {
-
         let alert = UIAlertController(title: "Details", message: "created:" + todoItem!.created_at.description, preferredStyle: .actionSheet)
 
-        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+        window?.rootViewController?.present(alert, animated: true, completion: nil)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             alert.dismiss(animated: true, completion: nil)
         }
     }
 
-    @objc func onCheckButton()
-    {
-        if let done = self.todoItem?.done
-        {
-
-            self.todoItem!.mark(done: !done)
+    @objc func onCheckButton() {
+        if let done = self.todoItem?.done {
+            todoItem!.mark(done: !done)
         }
         showStatus()
     }
 
-    public func showStatus()
-    {
-        if let done = self.todoItem?.done
-        {
-            if(done)
-            {
+    public func showStatus() {
+        if let done = self.todoItem?.done {
+            if done {
                 checkButton.backgroundColor = UIColor.systemBlue
                 editableLabel.alpha = 0.2
-            }
-            else
-            {
+            } else {
                 checkButton.backgroundColor = nil
                 editableLabel.alpha = 1
             }
         }
     }
-
-
-
 }

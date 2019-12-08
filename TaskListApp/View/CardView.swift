@@ -8,15 +8,15 @@
 
 import Foundation
 import UIKit
-class CardView: UIView
-{
-    required init?(coder: NSCoder) {
+class CardView: UIView {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
 
-        gradient = createStyledGradient(colors: (UIColor.init(named: "CardColorA")!, UIColor.init(named: "CardColorB")!), radius: 10, shadow: true)
+        gradient = createStyledGradient(colors: (UIColor(named: "CardColorA")!, UIColor(named: "CardColorB")!), radius: 10, shadow: true)
         addSubview(countsLabel)
         countsLabel.anchor(top: nil, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right * 2, width: 0, height: 50, enableInsets: false)
         addSubview(editableLabel)
@@ -29,25 +29,23 @@ class CardView: UIView
         lbl.textColor = .white
         lbl.font = .systemFont(ofSize: 20, weight: .bold)
         return lbl
-    } ()
+    }()
 
     let editableLabel: EditableText = {
         let lbl = EditableText(style: .whiteBold)
         lbl.setText(text: "Project")
         return lbl
-    } ()
+    }()
 
-    func setTitle(text: String)
-    {
+    func setTitle(text: String) {
         editableLabel.hideTextField()
         editableLabel.setText(text: text)
     }
-    private var gradient: CAGradientLayer? = nil
+
+    private var gradient: CAGradientLayer?
 
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        self.gradient?.frame = self.bounds
+        gradient?.frame = bounds
     }
 }
-
-

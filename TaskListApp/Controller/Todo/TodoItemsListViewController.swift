@@ -9,8 +9,7 @@
 import Foundation
 import UIKit
 
-class TodoItemsListViewController: UITableViewController
-{
+class TodoItemsListViewController: UITableViewController {
     var todo: Todo?
 
     override func viewDidLoad() {
@@ -19,9 +18,8 @@ class TodoItemsListViewController: UITableViewController
         tableView.allowsSelection = false
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController
-        {
+    override func viewDidAppear(_: Bool) {
+        if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController {
             navigation.addButton.delegate = self
         }
     }
@@ -33,20 +31,18 @@ class TodoItemsListViewController: UITableViewController
         }
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         todo?.todoItems.count ?? 0
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+    override func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TodoItemViewCell()
         cell.todoItem = todo?.todoItems[indexPath.item]
         return cell
     }
 }
 
-extension TodoItemsListViewController: AddButtonDelegate
-{
+extension TodoItemsListViewController: AddButtonDelegate {
     func onClickAddButton() {
         todo?.createItem()
         tableView.reloadData(with: .automatic)

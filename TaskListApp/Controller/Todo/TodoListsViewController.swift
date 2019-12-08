@@ -9,20 +9,13 @@
 import Foundation
 import UIKit
 
-
-class TodoListViewController: UITableViewController, AddButtonDelegate, TodoViewCellDelegate
-{
-
-
-
+class TodoListViewController: UITableViewController, AddButtonDelegate, TodoViewCellDelegate {
     let todoController: TodoManager = TodoManager.shared
 
     func onTodoClick(todo: Todo?) {
-
         let vc = TodoItemsListViewController()
         vc.todo = todo
-        self.navigationController?.pushViewController(vc, animated: true)
-
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -34,16 +27,14 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
 
     func onClickAddButton() {
         todoController.createTodo()
-        if(todoController.todos.count > 5)
-        {
+        if todoController.todos.count > 5 {
             todoController.dropAll()
         }
         tableView.reloadData(with: .fade)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController
-        {
+    override func viewDidAppear(_: Bool) {
+        if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController {
             navigation.addButton.delegate = self
         }
 
@@ -55,26 +46,23 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
     }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         todoController.todos.count
     }
 
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    override func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         100
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+    override func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TodoViewCell()
         cell.todo = todoController.todos[indexPath.item]
         cell.delegate = self
         return cell
     }
 
-    @objc func addButonClicked()
-    {
+    @objc func addButonClicked() {
         TodoManager.shared.createTodo()
     }
-
-
 }

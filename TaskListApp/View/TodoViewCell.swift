@@ -9,28 +9,21 @@
 import Foundation
 import UIKit
 
-
-protocol TodoViewCellDelegate
-{
+protocol TodoViewCellDelegate {
     func onTodoClick(todo: Todo?)
 }
 
-class TodoViewCell: UITableViewCell, EditableTextDelegate
-{
-
-    var delegate: TodoViewCellDelegate? = nil
+class TodoViewCell: UITableViewCell, EditableTextDelegate {
+    var delegate: TodoViewCellDelegate?
 
     func onClick() {
-        delegate?.onTodoClick(todo: self.todo)
+        delegate?.onTodoClick(todo: todo)
     }
 
-    var todo: Todo?
-    {
-        didSet
-        {
+    var todo: Todo? {
+        didSet {
             cardView.setTitle(text: todo?.title ?? "")
-            if let data: Todo = todo
-            {
+            if let data: Todo = todo {
                 cardView.countsLabel.text = String(data.doneItems.count) + "/" + String(data.todoItems.count)
             }
         }
@@ -49,11 +42,9 @@ class TodoViewCell: UITableViewCell, EditableTextDelegate
         addSubview(cardView)
         cardView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: layoutMargins.top * 2, paddingLeft: layoutMargins.left, paddingBottom: layoutMargins.bottom * 2, paddingRight: layoutMargins.right, width: 0, height: 0, enableInsets: false)
         cardView.editableLabel.delegate = self
-
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
