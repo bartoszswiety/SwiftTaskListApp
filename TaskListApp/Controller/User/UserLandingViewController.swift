@@ -10,10 +10,9 @@ import Foundation
 import UIKit
 
 class UserLandingViewController: UIStackViewController {
-
     var logoImage: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage.init(systemName: "square.and.pencil")
+        img.image = UIImage(systemName: "square.and.pencil")
         img.contentMode = .scaleAspectFit
         img.tintColor = .label
         return img
@@ -48,7 +47,7 @@ class UserLandingViewController: UIStackViewController {
             registerButton.fullWidthConstraint(),
             loginButton.heightConstraint(),
             registerButton.heightConstraint(),
-            stackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 100)
+            stackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 100),
         ])
         registerButton.addTarget(self, action: #selector(click), for: .touchUpInside)
         stackView.spacing = 20
