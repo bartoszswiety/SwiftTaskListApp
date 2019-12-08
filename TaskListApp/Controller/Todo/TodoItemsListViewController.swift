@@ -11,11 +11,11 @@ import UIKit
 
 class TodoItemsListViewController: UITableViewController
 {
-    let todoController = TodoController.shared
+    let todoManager: TodoManager = TodoManager.shared
 
     override func viewDidLoad() {
         title = "Todo"
-        todoController.addTask(title: "SIema")
+
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -26,13 +26,13 @@ class TodoItemsListViewController: UITableViewController
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        todoManager.todos.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = TaskViewCell()
-        cell.todo = todoController.todos[indexPath.item]
+        cell.todo = todoManager.todos[indexPath.item] as! Todo
         return cell
     }
 }

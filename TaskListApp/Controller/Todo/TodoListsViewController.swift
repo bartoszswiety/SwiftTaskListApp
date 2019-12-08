@@ -13,6 +13,8 @@ import UIKit
 class TodoListViewController: UITableViewController
 {
 
+    let todoController: TodoManager = TodoManager.shared
+
     override func viewDidLoad() {
 //        view.backgroundColor = .systemIndigo
         title = "To Do"
@@ -26,7 +28,7 @@ class TodoListViewController: UITableViewController
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 130
+        500
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
