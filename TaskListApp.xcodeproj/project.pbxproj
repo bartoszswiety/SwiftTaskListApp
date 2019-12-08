@@ -28,6 +28,11 @@
 		D1801CCA2398F33B008A46AF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1801CC82398F33B008A46AF /* LaunchScreen.storyboard */; };
 		D1801CD52398F33B008A46AF /* TaskListAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1801CD42398F33B008A46AF /* TaskListAppTests.swift */; };
 		D1801CE02398F33B008A46AF /* TaskListAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1801CDF2398F33B008A46AF /* TaskListAppUITests.swift */; };
+		D1D3F400239DA51A00673E53 /* UserNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F3FF239DA51A00673E53 /* UserNavigationController.swift */; };
+		D1D3F402239DA59E00673E53 /* UserLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F401239DA59E00673E53 /* UserLandingViewController.swift */; };
+		D1D3F404239DA5DC00673E53 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F403239DA5DC00673E53 /* RoundButton.swift */; };
+		D1D3F407239DA93C00673E53 /* UIStackViewControlloer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F406239DA93C00673E53 /* UIStackViewControlloer.swift */; };
+		D1D3F409239DAFED00673E53 /* UserRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F408239DAFED00673E53 /* UserRegisterViewController.swift */; };
 		D1FF619F239ABC4600FEBBA4 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF619E239ABC4500FEBBA4 /* R.generated.swift */; };
 		D1FF61A9239ABD7900FEBBA4 /* TodoNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61A8239ABD7900FEBBA4 /* TodoNavigationController.swift */; };
 		D1FF61AC239ABDB600FEBBA4 /* TodoItemsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61AB239ABDB600FEBBA4 /* TodoItemsListViewController.swift */; };
@@ -86,6 +91,11 @@
 		D1801CDB2398F33B008A46AF /* TaskListAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TaskListAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1801CDF2398F33B008A46AF /* TaskListAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListAppUITests.swift; sourceTree = "<group>"; };
 		D1801CE12398F33B008A46AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D1D3F3FF239DA51A00673E53 /* UserNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNavigationController.swift; sourceTree = "<group>"; };
+		D1D3F401239DA59E00673E53 /* UserLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLandingViewController.swift; sourceTree = "<group>"; };
+		D1D3F403239DA5DC00673E53 /* RoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
+		D1D3F406239DA93C00673E53 /* UIStackViewControlloer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackViewControlloer.swift; sourceTree = "<group>"; };
+		D1D3F408239DAFED00673E53 /* UserRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegisterViewController.swift; sourceTree = "<group>"; };
 		D1FF619E239ABC4500FEBBA4 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = R.generated.swift; path = TaskListApp/Helpers/R.generated.swift; sourceTree = SOURCE_ROOT; };
 		D1FF61A8239ABD7900FEBBA4 /* TodoNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoNavigationController.swift; sourceTree = "<group>"; };
 		D1FF61AB239ABDB600FEBBA4 /* TodoItemsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemsListViewController.swift; sourceTree = "<group>"; };
@@ -210,6 +220,17 @@
 			path = TaskListAppUITests;
 			sourceTree = "<group>";
 		};
+		D1D3F3FE239DA50100673E53 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				D1D3F3FF239DA51A00673E53 /* UserNavigationController.swift */,
+				D1D3F401239DA59E00673E53 /* UserLandingViewController.swift */,
+				D1D3F406239DA93C00673E53 /* UIStackViewControlloer.swift */,
+				D1D3F408239DAFED00673E53 /* UserRegisterViewController.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
 		D1FF61A0239ABC5600FEBBA4 /* Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,6 +254,7 @@
 		D1FF61A2239ABC7A00FEBBA4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D1D3F3FE239DA50100673E53 /* User */,
 				D1FF61A7239ABD6800FEBBA4 /* Todo */,
 			);
 			path = Controller;
@@ -246,6 +268,7 @@
 				D123C781239C8CE30037DEB3 /* CardView.swift */,
 				D13EB16A239D475D00B9C943 /* AddButton.swift */,
 				D106F166239D55FA00BEE7E8 /* EditableText.swift */,
+				D1D3F403239DA5DC00673E53 /* RoundButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -555,6 +578,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1D3F400239DA51A00673E53 /* UserNavigationController.swift in Sources */,
 				D123C782239C8CE30037DEB3 /* CardView.swift in Sources */,
 				D123C77E239C7E8C0037DEB3 /* TodoListsViewController.swift in Sources */,
 				D1FF61A9239ABD7900FEBBA4 /* TodoNavigationController.swift in Sources */,
@@ -565,6 +589,8 @@
 				D1801CBB2398F339008A46AF /* AppDelegate.swift in Sources */,
 				D123C77A239C1B700037DEB3 /* CoreDataStack.swift in Sources */,
 				D1FF61AC239ABDB600FEBBA4 /* TodoItemsListViewController.swift in Sources */,
+				D1D3F402239DA59E00673E53 /* UserLandingViewController.swift in Sources */,
+				D1D3F409239DAFED00673E53 /* UserRegisterViewController.swift in Sources */,
 				D1FF61B0239ABE5800FEBBA4 /* Todo.swift in Sources */,
 				D13EB16B239D475D00B9C943 /* AddButton.swift in Sources */,
 				D13EB169239D442400B9C943 /* TodoItem.swift in Sources */,
@@ -572,8 +598,10 @@
 				D123C77C239C680E0037DEB3 /* Extensions.swift in Sources */,
 				D123C780239C80690037DEB3 /* TodoViewCell.swift in Sources */,
 				D106F167239D55FA00BEE7E8 /* EditableText.swift in Sources */,
+				D1D3F404239DA5DC00673E53 /* RoundButton.swift in Sources */,
 				D1801CBD2398F339008A46AF /* SceneDelegate.swift in Sources */,
 				D106F169239D7BA800BEE7E8 /* TableView.swift in Sources */,
+				D1D3F407239DA93C00673E53 /* UIStackViewControlloer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

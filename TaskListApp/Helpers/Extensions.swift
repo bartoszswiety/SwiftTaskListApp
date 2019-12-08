@@ -44,3 +44,19 @@ extension UIView {
         }
     }
 }
+
+extension UIView {
+    public func fullWidthConstraint() -> NSLayoutConstraint {
+        if let parent = self.superview {
+            return widthAnchor.constraint(equalTo: parent.layoutMarginsGuide.widthAnchor, multiplier: 1)
+        }
+        return NSLayoutConstraint()
+    }
+
+    public func heightConstraint(height: CGFloat = 60) -> NSLayoutConstraint {
+        if let parent = self.superview {
+            return heightAnchor.constraint(equalToConstant: height)
+        }
+        return NSLayoutConstraint()
+    }
+}

@@ -9,175 +9,221 @@ import UIKit
 
 /// This `R` struct is generated and contains references to static resources.
 struct R: Rswift.Validatable {
-    fileprivate static let applicationLocale = hostingBundle.preferredLocalizations.first.flatMap(Locale.init) ?? Locale.current
-    fileprivate static let hostingBundle = Bundle(for: R.Class.self)
+  fileprivate static let applicationLocale = hostingBundle.preferredLocalizations.first.flatMap(Locale.init) ?? Locale.current
+  fileprivate static let hostingBundle = Bundle(for: R.Class.self)
 
-    /// Find first language and bundle for which the table exists
-    fileprivate static func localeBundle(tableName: String, preferredLanguages: [String]) -> (Foundation.Locale, Foundation.Bundle)? {
-        // Filter preferredLanguages to localizations, use first locale
-        var languages = preferredLanguages
-            .map(Locale.init)
-            .prefix(1)
-            .flatMap { locale -> [String] in
-                if hostingBundle.localizations.contains(locale.identifier) {
-                    if let language = locale.languageCode, hostingBundle.localizations.contains(language) {
-                        return [locale.identifier, language]
-                    } else {
-                        return [locale.identifier]
-                    }
-                } else if let language = locale.languageCode, hostingBundle.localizations.contains(language) {
-                    return [language]
-                } else {
-                    return []
-                }
-            }
-
-        // If there's no languages, use development language as backstop
-        if languages.isEmpty {
-            if let developmentLocalization = hostingBundle.developmentLocalization {
-                languages = [developmentLocalization]
-            }
+  /// Find first language and bundle for which the table exists
+  fileprivate static func localeBundle(tableName: String, preferredLanguages: [String]) -> (Foundation.Locale, Foundation.Bundle)? {
+    // Filter preferredLanguages to localizations, use first locale
+    var languages = preferredLanguages
+      .map(Locale.init)
+      .prefix(1)
+      .flatMap { locale -> [String] in
+        if hostingBundle.localizations.contains(locale.identifier) {
+          if let language = locale.languageCode, hostingBundle.localizations.contains(language) {
+            return [locale.identifier, language]
+          } else {
+            return [locale.identifier]
+          }
+        } else if let language = locale.languageCode, hostingBundle.localizations.contains(language) {
+          return [language]
         } else {
-            // Insert Base as second item (between locale identifier and languageCode)
-            languages.insert("Base", at: 1)
-
-            // Add development language as backstop
-            if let developmentLocalization = hostingBundle.developmentLocalization {
-                languages.append(developmentLocalization)
-            }
+          return []
         }
+      }
 
-        // Find first language for which table exists
-        // Note: key might not exist in chosen language (in that case, key will be shown)
-        for language in languages {
-            if let lproj = hostingBundle.url(forResource: language, withExtension: "lproj"),
-                let lbundle = Bundle(url: lproj) {
-                let strings = lbundle.url(forResource: tableName, withExtension: "strings")
-                let stringsdict = lbundle.url(forResource: tableName, withExtension: "stringsdict")
+    // If there's no languages, use development language as backstop
+    if languages.isEmpty {
+      if let developmentLocalization = hostingBundle.developmentLocalization {
+        languages = [developmentLocalization]
+      }
+    } else {
+      // Insert Base as second item (between locale identifier and languageCode)
+      languages.insert("Base", at: 1)
 
-                if strings != nil || stringsdict != nil {
-                    return (Locale(identifier: language), lbundle)
-                }
-            }
-        }
+      // Add development language as backstop
+      if let developmentLocalization = hostingBundle.developmentLocalization {
+        languages.append(developmentLocalization)
+      }
+    }
 
-        // If table is available in main bundle, don't look for localized resources
-        let strings = hostingBundle.url(forResource: tableName, withExtension: "strings", subdirectory: nil, localization: nil)
-        let stringsdict = hostingBundle.url(forResource: tableName, withExtension: "stringsdict", subdirectory: nil, localization: nil)
+    // Find first language for which table exists
+    // Note: key might not exist in chosen language (in that case, key will be shown)
+    for language in languages {
+      if let lproj = hostingBundle.url(forResource: language, withExtension: "lproj"),
+         let lbundle = Bundle(url: lproj)
+      {
+        let strings = lbundle.url(forResource: tableName, withExtension: "strings")
+        let stringsdict = lbundle.url(forResource: tableName, withExtension: "stringsdict")
 
         if strings != nil || stringsdict != nil {
-            return (applicationLocale, hostingBundle)
+          return (Locale(identifier: language), lbundle)
         }
-
-        // If table is not found for requested languages, key will be shown
-        return nil
+      }
     }
 
-    /// Load string from Info.plist file
-    fileprivate static func infoPlistString(path: [String], key: String) -> String? {
-        var dict = hostingBundle.infoDictionary
-        for step in path {
-            guard let obj = dict?[step] as? [String: Any] else { return nil }
-            dict = obj
-        }
-        return dict?[key] as? String
+    // If table is available in main bundle, don't look for localized resources
+    let strings = hostingBundle.url(forResource: tableName, withExtension: "strings", subdirectory: nil, localization: nil)
+    let stringsdict = hostingBundle.url(forResource: tableName, withExtension: "stringsdict", subdirectory: nil, localization: nil)
+
+    if strings != nil || stringsdict != nil {
+      return (applicationLocale, hostingBundle)
     }
 
-    static func validate() throws {
-        try intern.validate()
+    // If table is not found for requested languages, key will be shown
+    return nil
+  }
+
+  /// Load string from Info.plist file
+  fileprivate static func infoPlistString(path: [String], key: String) -> String? {
+    var dict = hostingBundle.infoDictionary
+    for step in path {
+      guard let obj = dict?[step] as? [String: Any] else { return nil }
+      dict = obj
     }
+    return dict?[key] as? String
+  }
+
+  static func validate() throws {
+    try intern.validate()
+  }
+
+  #if os(iOS) || os(tvOS)
+  /// This `R.storyboard` struct is generated, and contains static references to 1 storyboards.
+  struct storyboard {
+    /// Storyboard `LaunchScreen`.
+    static let launchScreen = _R.storyboard.launchScreen()
 
     #if os(iOS) || os(tvOS)
-        /// This `R.storyboard` struct is generated, and contains static references to 1 storyboards.
-        struct storyboard {
-            /// Storyboard `LaunchScreen`.
-            static let launchScreen = _R.storyboard.launchScreen()
-
-            #if os(iOS) || os(tvOS)
-                /// `UIStoryboard(name: "LaunchScreen", bundle: ...)`
-                static func launchScreen(_: Void = ()) -> UIKit.UIStoryboard {
-                    return UIKit.UIStoryboard(resource: R.storyboard.launchScreen)
-                }
-            #endif
-
-            fileprivate init() {}
-        }
+    /// `UIStoryboard(name: "LaunchScreen", bundle: ...)`
+    static func launchScreen(_: Void = ()) -> UIKit.UIStoryboard {
+      return UIKit.UIStoryboard(resource: R.storyboard.launchScreen)
+    }
     #endif
 
-    /// This `R.color` struct is generated, and contains static references to 2 colors.
-    struct color {
-        /// Color `CardColorA`.
-        static let cardColorA = Rswift.ColorResource(bundle: R.hostingBundle, name: "CardColorA")
-        /// Color `CardColorB`.
-        static let cardColorB = Rswift.ColorResource(bundle: R.hostingBundle, name: "CardColorB")
+    fileprivate init() {}
+  }
+  #endif
 
-        #if os(iOS) || os(tvOS)
-            /// `UIColor(named: "CardColorA", bundle: ..., traitCollection: ...)`
-            @available(tvOS 11.0, *)
-            @available(iOS 11.0, *)
-            static func cardColorA(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
-                return UIKit.UIColor(resource: R.color.cardColorA, compatibleWith: traitCollection)
-            }
-        #endif
+  /// This `R.color` struct is generated, and contains static references to 6 colors.
+  struct color {
+    /// Color `ButtonColorA`.
+    static let buttonColorA = Rswift.ColorResource(bundle: R.hostingBundle, name: "ButtonColorA")
+    /// Color `ButtonColorB`.
+    static let buttonColorB = Rswift.ColorResource(bundle: R.hostingBundle, name: "ButtonColorB")
+    /// Color `CardColorA`.
+    static let cardColorA = Rswift.ColorResource(bundle: R.hostingBundle, name: "CardColorA")
+    /// Color `CardColorB`.
+    static let cardColorB = Rswift.ColorResource(bundle: R.hostingBundle, name: "CardColorB")
+    /// Color `GreenButtonCollorA`.
+    static let greenButtonCollorA = Rswift.ColorResource(bundle: R.hostingBundle, name: "GreenButtonCollorA")
+    /// Color `GreenButtonCollorB`.
+    static let greenButtonCollorB = Rswift.ColorResource(bundle: R.hostingBundle, name: "GreenButtonCollorB")
 
-        #if os(iOS) || os(tvOS)
-            /// `UIColor(named: "CardColorB", bundle: ..., traitCollection: ...)`
-            @available(tvOS 11.0, *)
-            @available(iOS 11.0, *)
-            static func cardColorB(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
-                return UIKit.UIColor(resource: R.color.cardColorB, compatibleWith: traitCollection)
-            }
-        #endif
-
-        fileprivate init() {}
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "ButtonColorA", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func buttonColorA(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.buttonColorA, compatibleWith: traitCollection)
     }
+    #endif
 
-    fileprivate struct intern: Rswift.Validatable {
-        fileprivate static func validate() throws {
-            try _R.validate()
-        }
-
-        fileprivate init() {}
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "ButtonColorB", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func buttonColorB(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.buttonColorB, compatibleWith: traitCollection)
     }
+    #endif
 
-    fileprivate class Class {}
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "CardColorA", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func cardColorA(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.cardColorA, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "CardColorB", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func cardColorB(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.cardColorB, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "GreenButtonCollorA", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func greenButtonCollorA(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.greenButtonCollorA, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "GreenButtonCollorB", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func greenButtonCollorB(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.greenButtonCollorB, compatibleWith: traitCollection)
+    }
+    #endif
 
     fileprivate init() {}
+  }
+
+  fileprivate struct intern: Rswift.Validatable {
+    fileprivate static func validate() throws {
+      try _R.validate()
+    }
+
+    fileprivate init() {}
+  }
+
+  fileprivate class Class {}
+
+  fileprivate init() {}
 }
 
 struct _R: Rswift.Validatable {
+  static func validate() throws {
+    #if os(iOS) || os(tvOS)
+    try storyboard.validate()
+    #endif
+  }
+
+  #if os(iOS) || os(tvOS)
+  struct storyboard: Rswift.Validatable {
     static func validate() throws {
-        #if os(iOS) || os(tvOS)
-            try storyboard.validate()
-        #endif
+      #if os(iOS) || os(tvOS)
+      try launchScreen.validate()
+      #endif
     }
 
     #if os(iOS) || os(tvOS)
-        struct storyboard: Rswift.Validatable {
-            static func validate() throws {
-                #if os(iOS) || os(tvOS)
-                    try launchScreen.validate()
-                #endif
-            }
+    struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
+      typealias InitialController = UIKit.UIViewController
 
-            #if os(iOS) || os(tvOS)
-                struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
-                    typealias InitialController = UIKit.UIViewController
+      let bundle = R.hostingBundle
+      let name = "LaunchScreen"
 
-                    let bundle = R.hostingBundle
-                    let name = "LaunchScreen"
-
-                    static func validate() throws {
-                        if #available(iOS 11.0, tvOS 11.0, *) {}
-                    }
-
-                    fileprivate init() {}
-                }
-            #endif
-
-            fileprivate init() {}
+      static func validate() throws {
+        if #available(iOS 11.0, tvOS 11.0, *) {
         }
+      }
+
+      fileprivate init() {}
+    }
     #endif
 
     fileprivate init() {}
+  }
+  #endif
+
+  fileprivate init() {}
 }

@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 extension UIView {
-    func createStyledGradient(colors: (UIColor, UIColor), radius: Float = 0, shadow: Bool = false) -> CAGradientLayer {
+    func createStyledGradient(colors: (UIColor, UIColor), radius: Float = 0, shadow: Bool = false, startPoint: CGPoint = CGPoint(x: 0, y: 0), endPoint: CGPoint = CGPoint(x: 1, y: 1)) -> CAGradientLayer {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame = bounds
         gradient.colors = [colors.0.cgColor, colors.1.cgColor]
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 1, y: 1)
+        gradient.startPoint = startPoint
+        gradient.endPoint = endPoint
         gradient.cornerRadius = CGFloat(radius)
         layer.addSublayer(gradient)
 
