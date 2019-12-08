@@ -15,13 +15,20 @@ protocol EditableTextDelegate
     func onClick()
 }
 
+
+
 class EditableText: UIView, UITextFieldDelegate
 {
-
+    enum Style
+    {
+        case normal
+        case whiteBold
+    }
     public static var singleton: EditableText? = nil
 
     var delegate: EditableTextDelegate? = nil
-    var text: String = ""
+    private var _text: String = ""
+
     private var button: UIButton = {
         let btn = UIButton()
         btn.titleLabel?.anchor(top: btn.topAnchor, left: btn.leftAnchor, bottom: btn.bottomAnchor, right: btn.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0, enableInsets: false)
@@ -30,12 +37,23 @@ class EditableText: UIView, UITextFieldDelegate
 
     private var textField: UITextField?
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+
+
+    init(style: Style = .normal) {
+        super.init(frame: CGRect.zero)
         addSubview(button)
         button.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0, enableInsets: false)
         button.addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
-        button.titleLabel?.font = .systemFont(ofSize: 27, weight: .bold)
+
+        if(style == .whiteBold)
+        {
+            button.titleLabel?.font = .systemFont(ofSize: 27, weight: .bold)
+            button.titleLabel?.textColor = .white
+        }
+        else
+        {
+            button.setTitleColor(.label, for: .normal)
+        }
 
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress))
         button.addGestureRecognizer(longGesture)
@@ -72,13 +90,14 @@ class EditableText: UIView, UITextFieldDelegate
         textField = UITextField()
         button.isHidden = true
         addSubview(textField!)
-        textField?.text = text
+        textField?.text = _text
         textField?.placeholder = "Enter Name"
         textField?.returnKeyType = .done
         textField?.becomeFirstResponder()
         textField?.delegate = self
         textField?.textColor = .systemGray
-        textField?.font = .systemFont(ofSize: 27, weight: .bold)
+        textField?.font = button.titleLabel?.font
+
         textField!.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0, enableInsets: false)
     }
 
@@ -98,7 +117,7 @@ class EditableText: UIView, UITextFieldDelegate
             enterMode()
         }
 
-        self.text = text
+        self._text = text
         button.setTitle(text, for: .normal)
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
@@ -107,7 +126,7 @@ class EditableText: UIView, UITextFieldDelegate
         print("done")
         textField.resignFirstResponder()
         hideTextField()
-        delegate?.onTextEdited(text: text)
+        delegate?.onTextEdited(text: _text)
         return true
     }
 

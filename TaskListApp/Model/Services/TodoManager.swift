@@ -32,7 +32,7 @@ public class TodoManager: NSObject
         }
     }
 
-    func deleteTodo(index: Int)
+    func removeTodo(index: Int)
     {
         if let todo: Todo = self.todos[index]
         {

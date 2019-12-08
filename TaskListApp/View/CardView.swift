@@ -32,7 +32,7 @@ class CardView: UIView
     } ()
 
     let editableLabel: EditableText = {
-        let lbl = EditableText()
+        let lbl = EditableText(style: .whiteBold)
         lbl.setText(text: "Project")
         return lbl
     } ()

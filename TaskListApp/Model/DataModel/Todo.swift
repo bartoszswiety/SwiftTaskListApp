@@ -36,11 +36,10 @@ extension Todo {
 
 }
 
-// MARK: Generated accessors for items
 extension Todo {
 
     @objc(addItemsObject:)
-    @NSManaged public func addToItems(_ value: TodoItem)
+    @NSManaged private func addToItems(_ value: TodoItem)
 
     @objc(removeItemsObject:)
     @NSManaged public func removeFromItems(_ value: TodoItem)
@@ -55,10 +54,28 @@ extension Todo {
 
 extension Todo
 {
+
+    public var todoItems: [TodoItem]
+    {
+        return items?.allObjects as! [TodoItem]
+    }
+
     func rename(title: String)
     {
         self.title = title
         setValue(title, forKey: "title")
+        TodoManager.shared.save()
+    }
+
+    func createItem()
+    {
+        addToItems(TodoItem(name: "unnamed"))
+        TodoManager.shared.save()
+    }
+
+    func removeItem(index: Int)
+    {
+        removeFromItems(todoItems[index])
         TodoManager.shared.save()
     }
 }

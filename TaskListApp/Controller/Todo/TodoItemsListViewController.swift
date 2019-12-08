@@ -11,28 +11,44 @@ import UIKit
 
 class TodoItemsListViewController: UITableViewController
 {
-    var todoItems: [TodoItem] = []
+    var todo: Todo?
 
     override func viewDidLoad() {
         title = "Todo"
-
+        title = todo?.title
+        tableView.allowsSelection = false
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController
+        {
+            navigation.addButton.delegate = self
+        }
+    }
+
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-//            self.tableArray.remove(at: indexPath.row)
-
+            todo?.removeItem(index: indexPath.item)
+            tableView.reloadData(with: .fade)
         }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        todoItems.count
+        todo?.todoItems.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = TaskViewCell()
-//        cell.todo = todo
+        let cell = TodoItemViewCell()
+        cell.todoItem = todo?.todoItems[indexPath.item]
         return cell
     }
 }
 
+extension TodoItemsListViewController: AddButtonDelegate
+{
+    func onClickAddButton() {
+        todo?.createItem()
+        tableView.reloadData(with: .automatic)
+    }
+}
