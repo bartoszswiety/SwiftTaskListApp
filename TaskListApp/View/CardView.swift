@@ -10,15 +10,13 @@ import Foundation
 import UIKit
 class CardView: UIView
 {
-    private let gradient: CAGradientLayer = CAGradientLayer()
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        setGradient()
-        setShadow()
+
+        gradient = createStyledGradient(colors: (UIColor.init(named: "CardColorA")!, UIColor.init(named: "CardColorB")!), radius: 10, shadow: true)
         addSubview(countsLabel)
         countsLabel.anchor(top: nil, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right * 2, width: 0, height: 50, enableInsets: false)
 
@@ -43,26 +41,12 @@ class CardView: UIView
         return lbl
     } ()
 
-    func setGradient()
-    {
-        gradient.frame = self.bounds
-        gradient.colors = [UIColor.systemBlue.cgColor, UIColor.systemBlue.cgColor]
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 1, y: 1)
-        gradient.cornerRadius = 10
-        self.layer.addSublayer(gradient)
-    }
-
-    func setShadow()
-    {
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.4
-        layer.shadowOffset = .zero
-        layer.shadowRadius = 10
-    }
+    private var gradient: CAGradientLayer? = nil
 
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        self.gradient.frame = self.bounds
+        self.gradient?.frame = self.bounds
     }
 }
+
+
