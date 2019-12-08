@@ -30,7 +30,7 @@ class TodoListViewController: UITableViewController
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.navigationController?.pushViewController(TasksLitViewController(), animated: true)
+        self.navigationController?.pushViewController(TodoItemsListViewController(), animated: true)
     }
 
 
