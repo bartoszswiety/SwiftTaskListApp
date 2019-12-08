@@ -32,6 +32,16 @@ public class TodoManager: NSObject
         }
     }
 
+    func deleteTodo(index: Int)
+    {
+        if let todo: Todo = self.todos[index]
+        {
+            todo.prepareForDeletion()
+            todos.remove(at: index)
+        }
+        save()
+    }
+
     func createTodo()
     {
         self.todos.insert(Todo(title: "unnamed"), at: 0)
@@ -57,8 +67,6 @@ public class TodoManager: NSObject
 
     func save()
     {
-
-
         do {
 //            CoreDataStack.contex.c
             try CoreDataStack.contex.save()

@@ -9,8 +9,20 @@
 import Foundation
 import UIKit
 
+
+protocol TodoViewCellDelegate
+{
+    func onTodoClick(todo: Todo?)
+}
+
 class TodoViewCell: UITableViewCell, EditableTextDelegate
 {
+
+    var delegate: TodoViewCellDelegate? = nil
+    
+    func onClick() {
+        delegate?.onTodoClick(todo: self.todo)
+    }
 
     var todo: Todo?
     {
