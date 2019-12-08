@@ -14,13 +14,19 @@ class TasksLitViewController: UITableViewController
     let todoController = TodoController.shared
 
     override func viewDidLoad() {
-        view.backgroundColor = .systemIndigo
         title = "Todo"
         todoController.addTask(title: "SIema")
     }
 
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+//            self.tableArray.remove(at: indexPath.row)
+
+        }
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        todoController.todos.count
+        3
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -30,3 +36,4 @@ class TasksLitViewController: UITableViewController
         return cell
     }
 }
+
