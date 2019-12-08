@@ -49,12 +49,19 @@ class UserLandingViewController: UIStackViewController {
             registerButton.heightConstraint(),
             stackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 100),
         ])
-        registerButton.addTarget(self, action: #selector(click), for: .touchUpInside)
+
+        loginButton.addTarget(self, action: #selector(loginClick), for: .touchUpInside)
+        registerButton.addTarget(self, action: #selector(registerClick), for: .touchUpInside)
+
         stackView.spacing = 20
         stackView.layoutIfNeeded()
     }
 
-    @objc func click() {
-//        navigationController?.pushViewController(UserRegisterViewController(), animated: true)
+    @objc func loginClick() {
+        navigationController?.pushViewController(UserLoginViewController(), animated: true)
+    }
+
+    @objc func registerClick() {
+        navigationController?.pushViewController(UserRegisterViewController(), animated: true)
     }
 }

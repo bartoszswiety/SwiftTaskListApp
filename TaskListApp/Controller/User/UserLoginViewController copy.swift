@@ -9,17 +9,7 @@
 import Foundation
 import UIKit
 
-class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
-    let loginField: UITextField = {
-        let field = UITextField()
-        field.placeholder = "login"
-        field.autocorrectionType = UITextAutocorrectionType.no
-        field.clearButtonMode = .whileEditing
-        field.returnKeyType = .next
-        field.setBottomBorder()
-        return field
-    }()
-
+class UserLoginViewController: UIStackViewController, UITextFieldDelegate {
     let emailField: UITextField = {
         let field = UITextField()
         field.placeholder = "email"
@@ -39,14 +29,14 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
         return field
     }()
 
-    var registerButton: UIButton = {
+    var loginButton: UIButton = {
         let btn = RoundButton(style: .blue)
-        btn.setTitle("Register", for: .normal)
+        btn.setTitle("Login", for: .normal)
         return btn
     }()
 
     override func viewDidLoad() {
-        title = "Register"
+        title = "Login"
         super.viewDidLoad()
         makeView()
         stackView.alignment = .top
@@ -54,21 +44,18 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
     }
 
     func makeView() {
-        stackView.addArrangedSubview(loginField)
         stackView.addArrangedSubview(emailField)
         stackView.addArrangedSubview(passwordField)
-        stackView.addArrangedSubview(registerButton)
+        stackView.addArrangedSubview(loginButton)
 
-        loginField.delegate = self
         emailField.delegate = self
         passwordField.delegate = self
-        registerButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
 
         NSLayoutConstraint.activate([
-            loginField.fullWidthConstraint(), loginField.heightConstraint(),
             emailField.fullWidthConstraint(), emailField.heightConstraint(),
             passwordField.fullWidthConstraint(), passwordField.heightConstraint(),
-            registerButton.fullWidthConstraint(), registerButton.heightConstraint(),
+            loginButton.fullWidthConstraint(), loginButton.heightConstraint(),
             stackView.topAnchor.constraint(equalToSystemSpacingBelow: view.layoutMarginsGuide.topAnchor, multiplier: 1),
         ])
     }
@@ -78,7 +65,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        var tab = [loginField, emailField, passwordField]
+        var tab = [emailField, passwordField]
         var id = tab.firstIndex(of: textField)
         textField.resignFirstResponder()
         if id! < tab.count - 1 {
