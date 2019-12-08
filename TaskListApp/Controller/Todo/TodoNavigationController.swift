@@ -25,13 +25,11 @@ public class TodoNavigationController: UINavigationController
 //        navigationBar.shadowImage = UIImage()
 //        navigationBar.isTranslucent = true
 
-
-        navigationBar.setItems([UINavigationItem(title: "Siema")], animated: true)
-//        navigationBar.prefersLargeTitles = true
+        navigationBar.prefersLargeTitles = true
 //        self.navigationItem.largeTitleDisplayMode = .always
 //        self.navigationBar.setTitleVerticalPositionAdjustment(200, for: .default)
-//        hidesBottomBarWhenPushed = true
-//        setToolbarHidden(true, animated: false)
-//        self.tabBarController?.tabBar.isHidden = true
+        hidesBottomBarWhenPushed = true
+        setToolbarHidden(true, animated: false)
+        self.tabBarController?.tabBar.isHidden = true
     }
 }
