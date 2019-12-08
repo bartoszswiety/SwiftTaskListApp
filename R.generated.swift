@@ -105,6 +105,34 @@ struct R: Rswift.Validatable {
   }
   #endif
 
+  /// This `R.color` struct is generated, and contains static references to 2 colors.
+  struct color {
+    /// Color `CardColorA`.
+    static let cardColorA = Rswift.ColorResource(bundle: R.hostingBundle, name: "CardColorA")
+    /// Color `CardColorB`.
+    static let cardColorB = Rswift.ColorResource(bundle: R.hostingBundle, name: "CardColorB")
+
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "CardColorA", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func cardColorA(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.cardColorA, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIColor(named: "CardColorB", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func cardColorB(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.cardColorB, compatibleWith: traitCollection)
+    }
+    #endif
+
+    fileprivate init() {}
+  }
+
   fileprivate struct intern: Rswift.Validatable {
     fileprivate static func validate() throws {
       try _R.validate()

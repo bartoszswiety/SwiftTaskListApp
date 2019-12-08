@@ -9,11 +9,23 @@
 import Foundation
 import UIKit
 
-class TodoViewCell: UITableViewCell
+class TodoViewCell: UITableViewCell, EditableTextDelegate
 {
 
-    var cardView: CardView = CardView()
+    var todo: Todo?
+    {
+        didSet
+        {
+            cardView.setTitle(text: todo?.title ?? "")
+        }
+    }
 
+    func onTextEdited(text: String) {
+        print(text)
+        todo?.rename(title: text)
+    }
+
+    var cardView: CardView = CardView()
 
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -21,6 +33,7 @@ class TodoViewCell: UITableViewCell
 
         addSubview(cardView)
         cardView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: layoutMargins.top * 2, paddingLeft: layoutMargins.left, paddingBottom: layoutMargins.bottom * 2, paddingRight: layoutMargins.right, width: 0, height: frame.height, enableInsets: false)
+        cardView.editableLabel.delegate = self
 
     }
 

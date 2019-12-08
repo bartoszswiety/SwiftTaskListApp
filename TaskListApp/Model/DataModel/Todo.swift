@@ -53,4 +53,12 @@ extension Todo {
 
 }
 
-
+extension Todo
+{
+    func rename(title: String)
+    {
+        self.title = title
+        setValue(title, forKey: "title")
+        TodoManager.shared.save()
+    }
+}

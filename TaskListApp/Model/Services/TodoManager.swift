@@ -32,15 +32,35 @@ public class TodoManager: NSObject
         }
     }
 
-    func addTask(title: String)
+    func createTodo()
     {
-        self.todos.append(Todo(title: title))
+        self.todos.insert(Todo(title: "unnamed"), at: 0)
         save()
+    }
+
+    func dropAll()
+    {
+        todos = []
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Todo")
+
+
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+        do {
+            try CoreDataStack.contex.execute(batchDeleteRequest)
+
+        } catch {
+            // Error Handling
+        }
+
     }
 
     func save()
     {
+
+
         do {
+//            CoreDataStack.contex.c
             try CoreDataStack.contex.save()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
