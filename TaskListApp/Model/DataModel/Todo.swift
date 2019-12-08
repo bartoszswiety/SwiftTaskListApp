@@ -17,6 +17,8 @@ public class Todo: NSManagedObject {
     {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
         self.setValue(title, forKey: "title")
+        self.setValue(NSDate(), forKey: "created_at")
+        self.setValue(NSDate(), forKey: "updated_at")
     }
 }
 
@@ -26,12 +28,12 @@ extension Todo {
         return NSFetchRequest<Todo>(entityName: "Todo")
     }
 
-    @NSManaged public var createdAt: Date?
-    @NSManaged public var createdBy: Int64
+    @NSManaged public var created_at: Date?
+    @NSManaged public var created_by: Int64
     @NSManaged public var id: Int64
     @NSManaged public var test: Float
     @NSManaged public var title: String?
-    @NSManaged public var updatedAt: Date?
+    @NSManaged public var updated_at: Date?
     @NSManaged public var items: NSSet?
 
 }
@@ -57,7 +59,16 @@ extension Todo
 
     public var todoItems: [TodoItem]
     {
-        return items?.allObjects as! [TodoItem]
+        return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
+            return item1.created_at > item2.created_at
+        }
+    }
+
+    public var doneItems: [TodoItem]
+    {
+        return todoItems.filter { (item) -> Bool in
+            return item.done
+        }
     }
 
     func rename(title: String)

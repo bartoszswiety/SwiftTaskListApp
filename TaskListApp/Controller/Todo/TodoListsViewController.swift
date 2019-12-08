@@ -46,6 +46,8 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
         {
             navigation.addButton.delegate = self
         }
+
+        tableView.reloadData()
     }
 
     override func viewDidLoad() {

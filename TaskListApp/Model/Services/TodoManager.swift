@@ -36,7 +36,13 @@ public class TodoManager: NSObject
     {
         if let todo: Todo = self.todos[index]
         {
-            todo.prepareForDeletion()
+            do
+            {
+                CoreDataStack.contex.delete(todo)
+            }
+            catch {
+
+            }
             todos.remove(at: index)
         }
         save()

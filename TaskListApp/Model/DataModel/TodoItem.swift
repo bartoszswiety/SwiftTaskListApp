@@ -16,6 +16,8 @@ public class TodoItem: NSManagedObject {
     {
         self.init(entity: NSEntityDescription.entity(forEntityName: "TodoItem", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
         self.setValue(name, forKey: "name")
+        self.setValue(NSDate(), forKey: "created_at")
+        self.setValue(NSDate(), forKey: "updated_at")
     }
 }
 
@@ -24,13 +26,13 @@ extension TodoItem {
         return NSFetchRequest<TodoItem>(entityName: "TodoItem")
     }
 
-    @NSManaged public var created_at: Date?
+    @NSManaged public var created_at: Date
     @NSManaged public var done: Bool
     @NSManaged public var id: Int64
-    @NSManaged public var name: String?
+    @NSManaged public var name: String
     @NSManaged public var todo_id: Int64
-    @NSManaged public var updated_at: Date?
-    @NSManaged public var todo: Todo?
+    @NSManaged public var updated_at: Date
+    @NSManaged public var todo: Todo
 
 }
 
