@@ -38,7 +38,7 @@ class TaskViewCell: UITableViewCell
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         addSubview(checkButton)
-        checkButton.anchor(top: topAnchor, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: layoutMargins.top, paddingLeft: layoutMargins.left, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right, width: frame.size.height * 0.8, height: frame.size.height * 0.8, enableInsets: true)
+        checkButton.anchor(top: topAnchor, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: layoutMargins.top, paddingLeft: layoutMargins.left, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right * 2, width: 35, height: 35, enableInsets: true)
 
         checkButton.layer.cornerRadius = frame.size.height * 0.4
 
