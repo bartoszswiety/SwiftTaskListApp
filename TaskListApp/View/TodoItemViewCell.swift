@@ -35,12 +35,12 @@ class TodoItemViewCell: UITableViewCell
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         addSubview(checkButton)
-        checkButton.anchor(top: topAnchor, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: layoutMargins.top, paddingLeft: layoutMargins.left, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right * 2, width: 35, height: 35, enableInsets: true)
+        checkButton.anchor(top: topAnchor, left: nil, bottom: bottomAnchor, right: rightAnchor, paddingTop: layoutMargins.top, paddingLeft: layoutMargins.left, paddingBottom: layoutMargins.bottom, paddingRight: layoutMargins.right * 2, width: 35, height: 0, enableInsets: true)
         checkButton.layer.cornerRadius = frame.size.height * 0.4
         checkButton.addTarget(self, action: #selector(onCheckButton), for: .touchUpInside)
 
         addSubview(editableLabel)
-        editableLabel.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: checkButton.leftAnchor, paddingTop: layoutMargins.top, paddingLeft: layoutMargins.left * 2, paddingBottom: layoutMargins.bottom, paddingRight: 0, width: 0, height: frame.size.height, enableInsets: true)
+        editableLabel.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: checkButton.leftAnchor, paddingTop: layoutMargins.top, paddingLeft: layoutMargins.left * 2, paddingBottom: layoutMargins.bottom, paddingRight: 0, width: 0, height: 0, enableInsets: true)
         editableLabel.delegate = self
     }
 
@@ -49,14 +49,22 @@ class TodoItemViewCell: UITableViewCell
     }
 }
 
-
 extension TodoItemViewCell: EditableTextDelegate
 {
     func onTextEdited(text: String) {
         self.todoItem?.rename(name: text)
     }
 
-    func onClick() { }
+    func onClick() {
+
+        let alert = UIAlertController(title: "Details", message: "created:" + todoItem!.created_at.description, preferredStyle: .actionSheet)
+
+        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            alert.dismiss(animated: true, completion: nil)
+        }
+    }
 
     @objc func onCheckButton()
     {
@@ -75,12 +83,12 @@ extension TodoItemViewCell: EditableTextDelegate
             if(done)
             {
                 checkButton.backgroundColor = UIColor.systemBlue
-                alpha = 0.2
+                editableLabel.alpha = 0.2
             }
             else
             {
                 checkButton.backgroundColor = nil
-                alpha = 1
+                editableLabel.alpha = 1
             }
         }
     }
