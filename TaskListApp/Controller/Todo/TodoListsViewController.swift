@@ -13,14 +13,21 @@ import UIKit
 class TodoListViewController: UITableViewController, AddButtonDelegate, TodoViewCellDelegate
 {
 
+
+
     let todoController: TodoManager = TodoManager.shared
+
     func onTodoClick(todo: Todo?) {
-        self.navigationController?.pushViewController(TodoItemsListViewController(), animated: true)
+
+        let vc = TodoItemsListViewController()
+        vc.todo = todo
+        self.navigationController?.pushViewController(vc, animated: true)
+
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            todoController.deleteTodo(index: indexPath.item)
+            todoController.removeTodo(index: indexPath.item)
             tableView.reloadData(with: .fade)
         }
     }
@@ -34,23 +41,17 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
         tableView.reloadData(with: .fade)
     }
 
-
-    let addButton: AddButton = AddButton()
+    override func viewDidAppear(_ animated: Bool) {
+        if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController
+        {
+            navigation.addButton.delegate = self
+        }
+    }
 
     override func viewDidLoad() {
-//        view.backgroundColor = .systemIndigo
         title = "To Do"
-
         tableView.separatorStyle = .none
-//        let barBtnVar = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButonClicked))
-
-        if let navigationBar: UINavigationBar = navigationController?.navigationBar
-        {
-            navigationBar.addSubview(addButton)
-            addButton.anchor(top: nil, left: nil, bottom: navigationBar.bottomAnchor, right: navigationBar.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: navigationBar.layoutMargins.bottom, paddingRight: navigationBar.layoutMargins.right * 2, width: 35, height: 35, enableInsets: true)
-            addButton.delegate = self
-        }
-
+        tableView.allowsSelection = false
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         todoController.todos.count

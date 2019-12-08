@@ -31,5 +31,17 @@ public class TodoNavigationController: UINavigationController
         hidesBottomBarWhenPushed = true
         setToolbarHidden(true, animated: false)
         self.tabBarController?.tabBar.isHidden = true
+        createAddButton()
+    }
+
+    let addButton: AddButton = AddButton()
+    func createAddButton()
+    {
+        if let navigationBar: UINavigationBar = navigationBar
+        {
+            navigationBar.addSubview(addButton)
+            addButton.anchor(top: nil, left: nil, bottom: navigationBar.bottomAnchor, right: navigationBar.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: navigationBar.layoutMargins.bottom, paddingRight: navigationBar.layoutMargins.right * 2, width: 35, height: 35, enableInsets: true)
+//            addButton.delegate = self
+        }
     }
 }
