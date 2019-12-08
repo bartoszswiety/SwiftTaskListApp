@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class TasksLitViewController: UITableViewController
+class TodoItemsListViewController: UITableViewController
 {
     let todoController = TodoController.shared
 
