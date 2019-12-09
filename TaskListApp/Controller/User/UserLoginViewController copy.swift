@@ -16,6 +16,7 @@ class UserLoginViewController: UIStackViewController, UITextFieldDelegate {
         field.returnKeyType = .next
         field.clearButtonMode = .whileEditing
         field.setBottomBorder()
+        field.backgroundColor = .systemBackground
         return field
     }()
 
@@ -26,6 +27,7 @@ class UserLoginViewController: UIStackViewController, UITextFieldDelegate {
         field.isSecureTextEntry = true
         field.clearButtonMode = .whileEditing
         field.setBottomBorder()
+        field.backgroundColor = .systemBackground
         return field
     }()
 

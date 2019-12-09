@@ -9,34 +9,29 @@
 import Foundation
 import Moya
 
-public enum FlexHire
-{
+public enum FlexHire {
     case singUP(name: String, email: String, password: String)
     case todos
 }
 
-
-extension FlexHire: TargetType
-{
+extension FlexHire: TargetType {
     public var baseURL: URL { return URL(string:
-            "https://todos.flexhire.com/")! }
+        "https://todos.flexhire.com/")! }
 
     public var token: String {
-        return API.shared.user.access_key
+        return UserManager.shared.user.access_key
     }
 
     public var path: String {
-        switch self
-        {
-        case .singUP(_, _, _): return "signup"
+        switch self {
+        case .singUP: return "signup"
         case .todos: return "todos"
         }
     }
 
     public var method: Moya.Method {
-        switch self
-        {
-        case .singUP(_, _, _): return .post
+        switch self {
+        case .singUP: return .post
         case .todos: return .get
         }
     }
@@ -47,7 +42,6 @@ extension FlexHire: TargetType
 
     public var task: Task {
         switch self {
-
         case .todos:
             return .requestPlain
 

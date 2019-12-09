@@ -12,9 +12,9 @@ import UIKit
 class UserLandingViewController: UIStackViewController {
     var logoImage: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(systemName: "square.and.pencil")
+        img.image = UIImage(systemName: "bolt.horizontal.icloud")
         img.contentMode = .scaleAspectFit
-        img.tintColor = .label
+        img.tintColor = .systemGray3
         return img
     }()
 
@@ -31,18 +31,18 @@ class UserLandingViewController: UIStackViewController {
     }()
 
     override func viewDidLoad() {
-        title = "Hello"
+        title = "Flexhire Cloud"
         super.viewDidLoad()
         makeView()
     }
 
     func makeView() {
         stackView.addArrangedSubview(logoImage)
-        stackView.addArrangedSubview(loginButton)
         stackView.addArrangedSubview(registerButton)
+        stackView.addArrangedSubview(loginButton)
         NSLayoutConstraint.activate([
             logoImage.fullWidthConstraint(),
-            logoImage.heightConstraint(height: 220),
+            logoImage.heightConstraint(height: 150),
             loginButton.fullWidthConstraint(),
             registerButton.fullWidthConstraint(),
             loginButton.heightConstraint(),
@@ -54,6 +54,7 @@ class UserLandingViewController: UIStackViewController {
         registerButton.addTarget(self, action: #selector(registerClick), for: .touchUpInside)
 
         stackView.spacing = 20
+        stackView.setCustomSpacing(50, after: logoImage)
         stackView.layoutIfNeeded()
     }
 

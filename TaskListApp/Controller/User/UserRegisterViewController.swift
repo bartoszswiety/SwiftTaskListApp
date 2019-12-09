@@ -17,6 +17,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
         field.clearButtonMode = .whileEditing
         field.returnKeyType = .next
         field.setBottomBorder()
+        field.backgroundColor = .systemBackground
         return field
     }()
 
@@ -26,6 +27,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
         field.returnKeyType = .next
         field.clearButtonMode = .whileEditing
         field.setBottomBorder()
+        field.backgroundColor = .systemBackground
         return field
     }()
 
@@ -36,6 +38,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
         field.isSecureTextEntry = true
         field.clearButtonMode = .whileEditing
         field.setBottomBorder()
+        field.backgroundColor = .systemBackground
         return field
     }()
 
@@ -91,5 +94,29 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
 
     @objc func submit() {
         let box = createWaitingBox()
+        UserManager.shared.singup(name: loginField.text!, email: emailField.text!, password: passwordField.text!) { result, message in
+
+            print(result)
+            box.removeFromSuperview()
+
+            switch result {
+            case .fail:
+                if message.contains("Password") {
+                    self.passwordField.errorHighlight()
+                }
+
+                if message.contains("Name") {
+                    self.loginField.errorHighlight()
+                }
+
+                if message.contains("Email") {
+                    self.emailField.errorHighlight()
+                }
+
+            case .success:
+
+                break
+            }
+        }
     }
 }

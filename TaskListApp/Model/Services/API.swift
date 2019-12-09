@@ -6,18 +6,24 @@
 //  Copyright © 2019 Bartosz Swiety. All rights reserved.
 //
 
+import CoreData
 import Foundation
 import Moya
-import CoreData
 
-public class API
-{
+public class API {
     public static var shared: API = API()
     public let provider = MoyaProvider<FlexHire>()
 
-    public enum RequestResult
-    {
+    public enum RequestResult {
         case success
         case fail
+    }
+
+    public enum SyncResultMessage {
+        case user
+    }
+
+    public func sync(handler: @escaping ((API.RequestResult, API.SyncResultMessage) -> Void)) {
+        return handler(.fail, .user)
     }
 }
