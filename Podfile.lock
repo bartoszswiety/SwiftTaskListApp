@@ -5,6 +5,7 @@ PODS:
   - Moya/Core (13.0.1):
     - Alamofire (~> 4.1)
     - Result (~> 4.1)
+  - ObjectMapper (3.5.1)
   - R.swift (5.1.0):
     - R.swift.Library (~> 5.1.0)
   - R.swift.Library (5.1.0)
@@ -12,12 +13,14 @@ PODS:
 
 DEPENDENCIES:
   - Moya
+  - ObjectMapper
   - R.swift
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - Moya
+    - ObjectMapper
     - R.swift
     - R.swift.Library
     - Result
@@ -25,10 +28,11 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
+  ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
   R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
   R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
 
-PODFILE CHECKSUM: 083f822569ea2aad3e665742846d890b6b8c1c23
+PODFILE CHECKSUM: adb045cadb118827337526f5497dc8774eb38741
 
 COCOAPODS: 1.8.4

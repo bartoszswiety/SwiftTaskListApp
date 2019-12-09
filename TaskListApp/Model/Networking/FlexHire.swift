@@ -12,6 +12,7 @@ import Moya
 public enum FlexHire {
     case singUP(name: String, email: String, password: String)
     case todos
+    case addTodo(title: String)
 }
 
 extension FlexHire: TargetType {
@@ -26,6 +27,7 @@ extension FlexHire: TargetType {
         switch self {
         case .singUP: return "signup"
         case .todos: return "todos"
+        case .addTodo: return "todos"
         }
     }
 
@@ -33,6 +35,7 @@ extension FlexHire: TargetType {
         switch self {
         case .singUP: return .post
         case .todos: return .get
+        case .addTodo: return .post
         }
     }
 
@@ -42,6 +45,8 @@ extension FlexHire: TargetType {
 
     public var task: Task {
         switch self {
+        case let .addTodo(title):
+            return .requestParameters(parameters: ["title": title], encoding: URLEncoding.queryString)
         case .todos:
             return .requestPlain
 

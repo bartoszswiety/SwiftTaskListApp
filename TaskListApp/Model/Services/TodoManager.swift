@@ -14,6 +14,26 @@ public class TodoManager: NSObject {
     public static var shared: TodoManager = TodoManager()
     public var todos: [Todo] = []
 
+    public func sync(handler: @escaping ((API.RequestResult, API.SyncResultMessage) -> Void)) {
+        if UserManager.shared.getState == .noAccessToken {
+            return handler(.fail, .user)
+        } else {
+            print("git")
+            print(UserManager.shared.user.access_key)
+            API.shared.provider.request(.todos) { result in
+                switch result {
+                case let .success(response):
+
+                    print(try! response.mapString())
+
+                case let .failure(error):
+                    print(error)
+                    return handler(.fail, .user)
+                }
+            }
+        }
+    }
+
     public override init() {
         super.init()
         loadTodosFromCoreData()
@@ -40,7 +60,6 @@ public class TodoManager: NSObject {
 
     func createTodo() {
         todos.insert(Todo(title: "unnamed"), at: 0)
-        save()
     }
 
     func dropAll() {
@@ -64,5 +83,78 @@ public class TodoManager: NSObject {
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
+    }
+}
+
+extension Todo {
+    func set(dictionary: [String: Any]) {
+        if let id: Int64 = dictionary["id"] as? Int64 {
+            self.id = id
+        }
+
+        if let created_by: Int64 = dictionary["created_by"] as? Int64 {
+            self.created_by = created_by
+        }
+
+        if let title: String = dictionary["title"] as? String {
+            self.title = title
+        }
+
+        if let created_at: Date = DateFormatter.date(string: dictionary["created_at"] as! String) {
+            self.created_at = created_at
+        }
+
+        if let updated_at: Date = DateFormatter.date(string: dictionary["updated_at"] as! String) {
+            self.updated_at = updated_at
+        }
+    }
+
+    public func sync() {
+        if id != -1 {
+            // Update
+        } else {
+            API.shared.provider.request(.addTodo(title: title ?? "")) { result in
+                switch result {
+                case let .success(response):
+                    do {
+                        print(try! response.mapString())
+                        self.set(dictionary: response.mapDictionary())
+                    } catch let error as NSError {
+                        print("Could not sync. \(error), \(error.userInfo)")
+                    }
+                case .failure:
+                    break
+                }
+            }
+        }
+        TodoManager.shared.save()
+    }
+
+    public var todoItems: [TodoItem] {
+        return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
+            item1.created_at > item2.created_at
+        }
+    }
+
+    public var doneItems: [TodoItem] {
+        return todoItems.filter { (item) -> Bool in
+            item.done
+        }
+    }
+
+    func rename(title: String) {
+        self.title = title
+        setValue(title, forKey: "title")
+        sync()
+    }
+
+    func createItem() {
+        addToItems(TodoItem(name: "unnamed"))
+        TodoManager.shared.save()
+    }
+
+    func removeItem(index: Int) {
+        removeFromItems(todoItems[index])
+        TodoManager.shared.save()
     }
 }

@@ -20,7 +20,7 @@ public class UserNavigationController: UINavigationController {
         view.backgroundColor = UIColor.clear
         navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationBar.setTitleVerticalPositionAdjustment(200, for: .default)
+//        navigationBar.setTitleVerticalPositionAdjustment(200, for: .default)
         hidesBottomBarWhenPushed = true
         setToolbarHidden(true, animated: false)
         tabBarController?.tabBar.isHidden = true

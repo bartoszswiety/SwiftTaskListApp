@@ -25,6 +25,7 @@ extension User {
 
         if let data = UserDefaults().data(forKey: "user") {
             do {
+                print(data)
                 let user: User = try decoder.decode(User.self, from: data)
                 return user
             } catch {}

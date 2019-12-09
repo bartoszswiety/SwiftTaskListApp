@@ -8,6 +8,7 @@
 
 import CoreData
 import Foundation
+import Moya
 
 @objc(Todo)
 public class Todo: NSManagedObject {
@@ -16,6 +17,7 @@ public class Todo: NSManagedObject {
         setValue(title, forKey: "title")
         setValue(NSDate(), forKey: "created_at")
         setValue(NSDate(), forKey: "updated_at")
+        setValue(-1, forKey: "id")
     }
 }
 
@@ -35,7 +37,7 @@ extension Todo {
 
 extension Todo {
     @objc(addItemsObject:)
-    @NSManaged private func addToItems(_ value: TodoItem)
+    @NSManaged public func addToItems(_ value: TodoItem)
 
     @objc(removeItemsObject:)
     @NSManaged public func removeFromItems(_ value: TodoItem)
@@ -45,34 +47,4 @@ extension Todo {
 
     @objc(removeItems:)
     @NSManaged public func removeFromItems(_ values: NSSet)
-}
-
-extension Todo {
-    public var todoItems: [TodoItem] {
-        return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
-            item1.created_at > item2.created_at
-        }
-    }
-
-    public var doneItems: [TodoItem] {
-        return todoItems.filter { (item) -> Bool in
-            item.done
-        }
-    }
-
-    func rename(title: String) {
-        self.title = title
-        setValue(title, forKey: "title")
-        TodoManager.shared.save()
-    }
-
-    func createItem() {
-        addToItems(TodoItem(name: "unnamed"))
-        TodoManager.shared.save()
-    }
-
-    func removeItem(index: Int) {
-        removeFromItems(todoItems[index])
-        TodoManager.shared.save()
-    }
 }
