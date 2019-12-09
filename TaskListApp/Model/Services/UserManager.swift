@@ -10,6 +10,7 @@ import Foundation
 class UserManager {
     static var shared: UserManager = UserManager()
     var user: User = User.loadFromMemory()
+    private var state = States.offline
 
     public func singup(name: String, email: String, password: String, handler: @escaping ((API.RequestResult, String) -> Void)) {
         API.shared.provider.request(.singUP(name: name, email: email, password: password)) { result in
@@ -26,6 +27,7 @@ class UserManager {
                             self.user.email = email
                             self.user.login = name
                             self.user.access_key = key
+                            self.user.save()
                             handler(.success, message)
                             return
                         }
@@ -44,7 +46,18 @@ class UserManager {
 }
 
 extension UserManager {
-    var loggedIN: Bool {
-        return user.access_key != ""
+    public enum States {
+        case noAccessToken
+        case offline
+        case online
+        case failed
+    }
+
+    var getState: States {
+        if user.access_key == "" {
+            return .noAccessToken
+        } else {
+            return state
+        }
     }
 }

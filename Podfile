@@ -6,6 +6,7 @@ target 'TaskListApp' do
   use_frameworks!
 
 pod 'Moya'
+pod 'ObjectMapper'
 pod 'R.swift'
   # Pods for TaskListApp
 

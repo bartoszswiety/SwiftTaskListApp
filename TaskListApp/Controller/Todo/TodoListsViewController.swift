@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class TodoListViewController: UITableViewController, AddButtonDelegate, TodoViewCellDelegate {
-    let todoController: TodoManager = TodoManager.shared
+    let todoManager: TodoManager = TodoManager.shared
 
     func onTodoClick(todo: Todo?) {
         let vc = TodoItemsListViewController()
@@ -20,15 +20,15 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            todoController.removeTodo(index: indexPath.item)
+            todoManager.removeTodo(index: indexPath.item)
             tableView.reloadData(with: .fade)
         }
     }
 
     func onClickAddButton() {
-        todoController.createTodo()
-        if todoController.todos.count > 5 {
-            todoController.dropAll()
+        todoManager.createTodo()
+        if todoManager.todos.count > 5 {
+            todoManager.dropAll()
         }
         tableView.reloadData(with: .fade)
     }
@@ -44,7 +44,7 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
         title = "To Do"
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        API.shared.sync { result, message in
+        todoManager.sync { result, message in
             switch result {
             case .fail:
 
@@ -59,7 +59,7 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        todoController.todos.count
+        todoManager.todos.count
     }
 
     override func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
@@ -68,7 +68,7 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
 
     override func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TodoViewCell()
-        cell.todo = todoController.todos[indexPath.item]
+        cell.todo = todoManager.todos[indexPath.item]
         cell.delegate = self
         return cell
     }

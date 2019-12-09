@@ -22,8 +22,4 @@ public class API {
     public enum SyncResultMessage {
         case user
     }
-
-    public func sync(handler: @escaping ((API.RequestResult, API.SyncResultMessage) -> Void)) {
-        return handler(.fail, .user)
-    }
 }

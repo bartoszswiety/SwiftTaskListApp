@@ -66,7 +66,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
         emailField.delegate = self
         passwordField.delegate = self
         registerButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
-
+        loginField.becomeFirstResponder()
         NSLayoutConstraint.activate([
             loginField.fullWidthConstraint(), loginField.heightConstraint(),
             emailField.fullWidthConstraint(), emailField.heightConstraint(),
@@ -114,8 +114,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
                 }
 
             case .success:
-
-                break
+                self.dismiss(animated: true, completion: nil)
             }
         }
     }
