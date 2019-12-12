@@ -12,38 +12,31 @@ class UserManager {
     var user: User = User.loadFromMemory()
     private var state = States.offline
 
-    public func singup(name: String, email: String, password: String, handler: @escaping ((API.RequestResult, String) -> Void)) {
-        API.shared.provider.request(.singUP(name: name, email: email, password: password)) { result in
-            switch result {
-            case let .success(response):
-                do {
-                    print(try response.mapString())
-                } catch {}
-                let data = response.mapDictionary()
 
-                if let message: String = data["message"] as? String {
-                    if let key: String = data["auth_token"] as? String {
-                        if key != "" {
-                            self.user.email = email
-                            self.user.login = name
-                            self.user.access_key = key
-                            self.user.save()
-                            handler(.success, message)
-                            return
-                        }
+    public func singup(name: String, email: String, password: String, onSuccess: @escaping () -> Void, onError: @escaping (String) -> Void)
+    {
+
+
+        API.request(target: .singUP(name: name, email: email, password: password), success: { (response, data) in
+
+            if let message: String = data["message"] as? String {
+                if let key: String = data["auth_token"] as? String {
+                    if key != "" {
+                        self.user.email = email
+                        self.user.login = name
+                        self.user.access_key = key
+                        self.user.save()
+                        onError(message)
                     }
-                    handler(.fail, message)
-                    return
-                } else {
-                    handler(.fail, "Response JSON")
                 }
-
-            case .failure:
-                handler(.fail, "")
             }
+            onSuccess()
+        }) { (response, message) in
+            onError(message)
         }
     }
 }
+
 
 extension UserManager {
     public enum States {

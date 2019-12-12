@@ -11,11 +11,13 @@ import Foundation
 
 @objc(TodoItem)
 public class TodoItem: NSManagedObject {
-    convenience init(name: String) {
+    convenience init(name: String, parent: Todo) {
         self.init(entity: NSEntityDescription.entity(forEntityName: "TodoItem", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
         setValue(name, forKey: "name")
+        setValue(-1, forKey: "id")
         setValue(NSDate(), forKey: "created_at")
         setValue(NSDate(), forKey: "updated_at")
+        setValue(parent.id, forKey: "todo_id")
     }
 }
 
@@ -34,10 +36,45 @@ extension TodoItem {
 }
 
 extension TodoItem {
+
+
+    func set(dictionary: [String: Any]) {
+        if let id: Int64 = dictionary["id"] as? Int64 {
+            self.id = id
+        }
+        if let name: String = dictionary["name"] as? String {
+            self.name = name
+        }
+
+        if let created_at: Date = DateFormatter.date(string: dictionary["created_at"] as! String) {
+            self.created_at = created_at
+        }
+
+        if let updated_at: Date = DateFormatter.date(string: dictionary["updated_at"] as! String) {
+            self.updated_at = updated_at
+        }
+    }
+
+    func syncTitle()
+    {
+        if(id == -1)
+        {
+            //ADD
+            API.request(target: .addTodoItem(name: self.name, parentID: String(self.todo_id)), success: { (result, dictionary) in
+                self.set(dictionary: dictionary)
+            }) { (result, message) in
+
+            }
+        }
+
+    }
+
+
     public func rename(name: String) {
         self.name = name
         setValue(name, forKey: "name")
         TodoManager.shared.save()
+        syncTitle()
     }
 
     public func mark(done: Bool = true) {

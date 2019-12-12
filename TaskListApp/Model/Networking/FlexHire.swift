@@ -13,11 +13,13 @@ public enum FlexHire {
     case singUP(name: String, email: String, password: String)
     case todos
     case addTodo(title: String)
+    case addTodoItem(name: String, parentID: String)
+    case updateTodo(id: String, title: String)
 }
 
 extension FlexHire: TargetType {
     public var baseURL: URL { return URL(string:
-        "https://todos.flexhire.com/")! }
+            "https://todos.flexhire.com/")! }
 
     public var token: String {
         return UserManager.shared.user.access_key
@@ -28,6 +30,8 @@ extension FlexHire: TargetType {
         case .singUP: return "signup"
         case .todos: return "todos"
         case .addTodo: return "todos"
+        case let .updateTodo(id, title): return "todos/" + id
+        case let .addTodoItem(name, parentID): return "todos/" + parentID + "/items"
         }
     }
 
@@ -36,6 +40,8 @@ extension FlexHire: TargetType {
         case .singUP: return .post
         case .todos: return .get
         case .addTodo: return .post
+        case .addTodoItem: return .post
+        case .updateTodo: return .patch
         }
     }
 
@@ -47,12 +53,14 @@ extension FlexHire: TargetType {
         switch self {
         case let .addTodo(title):
             return .requestParameters(parameters: ["title": title], encoding: URLEncoding.queryString)
+        case let .addTodoItem(name, parentID):
+            return .requestParameters(parameters: ["name": name, "todo_id": parentID, "done": "false"], encoding: URLEncoding.queryString)
         case .todos:
             return .requestPlain
-
         case let .singUP(name, email, password):
-
             return .requestParameters(parameters: ["name": name, "email": email, "password": password, "password_confirmation": password], encoding: URLEncoding.queryString)
+        case let .updateTodo(id, title):
+            return .requestParameters(parameters: ["id": id, "title": title], encoding: URLEncoding.queryString)
         }
     }
 

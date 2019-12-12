@@ -94,27 +94,22 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
 
     @objc func submit() {
         let box = createWaitingBox()
-        UserManager.shared.singup(name: loginField.text!, email: emailField.text!, password: passwordField.text!) { result, message in
 
-            print(result)
+        UserManager.shared.singup(name: loginField.text!, email: emailField.text!, password: passwordField.text!, onSuccess: {
+            self.dismiss(animated: true, completion: nil)
+            API.shared.syncAll()
+        }) { (message) in
             box.removeFromSuperview()
+            if message.contains("Password") {
+                self.passwordField.errorHighlight()
+            }
 
-            switch result {
-            case .fail:
-                if message.contains("Password") {
-                    self.passwordField.errorHighlight()
-                }
+            if message.contains("Name") {
+                self.loginField.errorHighlight()
+            }
 
-                if message.contains("Name") {
-                    self.loginField.errorHighlight()
-                }
-
-                if message.contains("Email") {
-                    self.emailField.errorHighlight()
-                }
-
-            case .success:
-                self.dismiss(animated: true, completion: nil)
+            if message.contains("Email") {
+                self.emailField.errorHighlight()
             }
         }
     }
