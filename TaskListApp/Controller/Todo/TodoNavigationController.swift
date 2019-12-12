@@ -13,22 +13,20 @@ public class TodoNavigationController: UINavigationController {
     public override func viewDidLoad() {
         let v = TodoListViewController()
         setViewControllers([v], animated: true)
-//        navigationBar.backgroundColor = .systemIndigo
         view.backgroundColor = .systemIndigo
-//        navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-//        navigationBar.setBackgroundImage(UIImage(), for: .default)
-//        navigationBar.shadowImage = UIImage()
-//        navigationBar.isTranslucent = true
 
         navigationBar.prefersLargeTitles = true
-//        self.navigationItem.largeTitleDisplayMode = .always
-//        self.navigationBar.setTitleVerticalPositionAdjustment(200, for: .default)
         hidesBottomBarWhenPushed = true
         setToolbarHidden(true, animated: false)
         tabBarController?.tabBar.isHidden = true
         createAddButton()
-    }
 
+        NotificationCenter.default.addObserver(self, selector: #selector(onUserFailed(_:)), name: .userError, object: nil) }
+
+
+    @objc func onUserFailed(_ notification: Notification) {
+        self.visibleViewController?.present(UserNavigationController(), animated: true, completion: nil)
+    }
     let addButton: AddButton = AddButton()
     func createAddButton() {
         if let navigationBar: UINavigationBar = navigationBar {

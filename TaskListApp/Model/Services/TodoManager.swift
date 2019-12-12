@@ -14,25 +14,25 @@ public class TodoManager: NSObject {
     public static var shared: TodoManager = TodoManager()
     public var todos: [Todo] = []
 
-    public func sync(handler: @escaping ((API.RequestResult, API.SyncResultMessage) -> Void)) {
-        if UserManager.shared.getState == .noAccessToken {
-            return handler(.fail, .user)
-        } else {
-            print("git")
-            print(UserManager.shared.user.access_key)
-            API.shared.provider.request(.todos) { result in
-                switch result {
-                case let .success(response):
-
-                    print(try! response.mapString())
-
-                case let .failure(error):
-                    print(error)
-                    return handler(.fail, .user)
-                }
-            }
-        }
-    }
+//    public func sync(handler: @escaping ((API.RequestResult, API.SyncResultMessage) -> Void)) {
+//        if UserManager.shared.getState == .noAccessToken {
+//            return handler(.fail, .user)
+//        } else {
+//            print("git")
+//            print(UserManager.shared.user.access_key)
+//            API.shared.provider.request(.todos) { result in
+//                switch result {
+//                case let .success(response):
+//
+//                    print(try! response.mapString())
+//
+//                case let .failure(error):
+//                    print(error)
+//                    return handler(.fail, .user)
+//                }
+//            }
+//        }
+//    }
 
     public override init() {
         super.init()
@@ -52,7 +52,7 @@ public class TodoManager: NSObject {
         if let todo: Todo = self.todos[index] {
             do {
                 CoreDataStack.contex.delete(todo)
-            } catch {}
+            } catch { }
             todos.remove(at: index)
         }
         save()
@@ -87,6 +87,36 @@ public class TodoManager: NSObject {
 }
 
 extension Todo {
+    public var todoItems: [TodoItem] {
+        return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
+            item1.created_at > item2.created_at
+        }
+    }
+
+    public var doneItems: [TodoItem] {
+        return todoItems.filter { (item) -> Bool in
+            item.done
+        }
+    }
+
+    func rename(title: String) {
+        self.title = title
+        setValue(title, forKey: "title")
+        syncTitle()
+    }
+
+    func createItem() {
+        addToItems(TodoItem(name: "unnamed", parent: self))
+    }
+
+    func removeItem(index: Int) {
+        removeFromItems(todoItems[index])
+        TodoManager.shared.save()
+    }
+}
+
+extension Todo
+{
     func set(dictionary: [String: Any]) {
         if let id: Int64 = dictionary["id"] as? Int64 {
             self.id = id
@@ -109,52 +139,26 @@ extension Todo {
         }
     }
 
-    public func sync() {
-        if id != -1 {
-            // Update
-        } else {
-            API.shared.provider.request(.addTodo(title: title ?? "")) { result in
-                switch result {
-                case let .success(response):
-                    do {
-                        print(try! response.mapString())
-                        self.set(dictionary: response.mapDictionary())
-                    } catch let error as NSError {
-                        print("Could not sync. \(error), \(error.userInfo)")
-                    }
-                case .failure:
-                    break
-                }
+    public func syncTitle()
+    {
+        if(id != -1)
+        {
+            //Update
+            API.request(target: .updateTodo(id: String(id), title: title!), success: { (result, dictionary) in
+                TodoManager.shared.save()
+            }) { (result, message) in
+                print(message)
             }
         }
-        TodoManager.shared.save()
-    }
-
-    public var todoItems: [TodoItem] {
-        return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
-            item1.created_at > item2.created_at
+        else
+        {
+            //Add
+            API.request(target: .addTodo(title: title ?? ""), success: { (result, dictionary) in
+                self.set(dictionary: dictionary)
+            }) { (result, message) in
+                print(message)
+            }
+            TodoManager.shared.save()
         }
-    }
-
-    public var doneItems: [TodoItem] {
-        return todoItems.filter { (item) -> Bool in
-            item.done
-        }
-    }
-
-    func rename(title: String) {
-        self.title = title
-        setValue(title, forKey: "title")
-        sync()
-    }
-
-    func createItem() {
-        addToItems(TodoItem(name: "unnamed"))
-        TodoManager.shared.save()
-    }
-
-    func removeItem(index: Int) {
-        removeFromItems(todoItems[index])
-        TodoManager.shared.save()
     }
 }

@@ -44,18 +44,18 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
         title = "To Do"
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        todoManager.sync { result, message in
-            switch result {
-            case .fail:
-
-                switch message {
-                case .user:
-                    self.present(UserNavigationController(), animated: true, completion: nil)
-                }
-            case .success:
-                break
-            }
-        }
+//        todoManager.sync { result, message in
+//            switch result {
+//            case .fail:
+//
+//                switch message {
+//                case .user:
+//                    self.present(UserNavigationController(), animated: true, completion: nil)
+//                }
+//            case .success:
+//                break
+//            }
+//        }
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
