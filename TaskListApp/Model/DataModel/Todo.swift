@@ -12,6 +12,8 @@ import Moya
 
 @objc(Todo)
 public class Todo: NSManagedObject {
+//    MARK: Initalizers
+
     convenience init(title: String) {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
         setValue(title, forKey: "title")
@@ -22,6 +24,8 @@ public class Todo: NSManagedObject {
 }
 
 extension Todo {
+//    MARK: Preporties
+
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Todo> {
         return NSFetchRequest<Todo>(entityName: "Todo")
     }
@@ -36,6 +40,8 @@ extension Todo {
 }
 
 extension Todo {
+//     MARK: Core Data Methods
+
     @objc(addItemsObject:)
     @NSManaged public func addToItems(_ value: TodoItem)
 
@@ -47,4 +53,36 @@ extension Todo {
 
     @objc(removeItems:)
     @NSManaged public func removeFromItems(_ values: NSSet)
+}
+
+extension Todo
+{
+//    MARK:Helpers
+
+    public var todoItems: [TodoItem] {
+        return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
+            item1.created_at > item2.created_at
+        }
+    }
+
+    public var doneItems: [TodoItem] {
+        return todoItems.filter { (item) -> Bool in
+            item.done
+        }
+    }
+
+    func rename(title: String) {
+        self.title = title
+        setValue(title, forKey: "title")
+        syncTitle()
+    }
+
+    func createItem() {
+        addToItems(TodoItem(name: "unnamed", parent: self))
+    }
+
+    func removeItem(index: Int) {
+        removeFromItems(todoItems[index])
+        TodoManager.shared.save()
+    }
 }
