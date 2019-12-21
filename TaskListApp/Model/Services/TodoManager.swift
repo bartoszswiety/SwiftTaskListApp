@@ -52,7 +52,7 @@ public class TodoManager: NSObject {
         if let todo: Todo = self.todos[index] {
             do {
                 CoreDataStack.contex.delete(todo)
-            } catch { }
+            } catch {}
             todos.remove(at: index)
         }
         save()
@@ -115,8 +115,7 @@ extension Todo {
     }
 }
 
-extension Todo
-{
+extension Todo {
     func set(dictionary: [String: Any]) {
         if let id: Int64 = dictionary["id"] as? Int64 {
             self.id = id
@@ -139,23 +138,19 @@ extension Todo
         }
     }
 
-    public func syncTitle()
-    {
-        if(id != -1)
-        {
-            //Update
-            API.request(target: .updateTodo(id: String(id), title: title!), success: { (result, dictionary) in
+    public func syncTitle() {
+        if id != -1 {
+            // Update
+            API.request(target: .updateTodo(id: String(id), title: title!), success: { _, _ in
                 TodoManager.shared.save()
-            }) { (result, message) in
+            }) { _, message in
                 print(message)
             }
-        }
-        else
-        {
-            //Add
-            API.request(target: .addTodo(title: title ?? ""), success: { (result, dictionary) in
+        } else {
+            // Add
+            API.request(target: .addTodo(title: title ?? ""), success: { _, dictionary in
                 self.set(dictionary: dictionary)
-            }) { (result, message) in
+            }) { _, message in
                 print(message)
             }
             TodoManager.shared.save()

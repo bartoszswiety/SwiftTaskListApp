@@ -21,12 +21,13 @@ public class TodoNavigationController: UINavigationController {
         tabBarController?.tabBar.isHidden = true
         createAddButton()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onUserFailed(_:)), name: .userError, object: nil) }
-
-
-    @objc func onUserFailed(_ notification: Notification) {
-        self.visibleViewController?.present(UserNavigationController(), animated: true, completion: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onUserFailed(_:)), name: .userError, object: nil)
     }
+
+    @objc func onUserFailed(_: Notification) {
+        visibleViewController?.present(UserNavigationController(), animated: true, completion: nil)
+    }
+
     let addButton: AddButton = AddButton()
     func createAddButton() {
         if let navigationBar: UINavigationBar = navigationBar {
