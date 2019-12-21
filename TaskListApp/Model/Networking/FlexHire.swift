@@ -15,6 +15,7 @@ public enum FlexHire {
     case addTodo(title: String)
     case addTodoItem(name: String, parentID: String)
     case updateTodo(id: String, title: String)
+    case updateTodoItem(parentID: String, itemID: String, name: String = "", done: String = "")
 }
 
 extension FlexHire: TargetType {
@@ -32,6 +33,8 @@ extension FlexHire: TargetType {
         case .addTodo: return "todos"
         case let .updateTodo(id, title): return "todos/" + id
         case let .addTodoItem(name, parentID): return "todos/" + parentID + "/items"
+        case let .updateTodoItem(parentID, itemID, name, done):
+            return "todos/" + parentID + "/items/" + itemID
         }
     }
 
@@ -40,8 +43,9 @@ extension FlexHire: TargetType {
         case .singUP: return .post
         case .todos: return .get
         case .addTodo: return .post
-        case .addTodoItem: return .post
         case .updateTodo: return .patch
+        case .addTodoItem: return .post
+        case .updateTodoItem: return .patch
         }
     }
 
@@ -61,6 +65,17 @@ extension FlexHire: TargetType {
             return .requestParameters(parameters: ["name": name, "email": email, "password": password, "password_confirmation": password], encoding: URLEncoding.queryString)
         case let .updateTodo(id, title):
             return .requestParameters(parameters: ["id": id, "title": title], encoding: URLEncoding.queryString)
+        case .updateTodoItem(let parentID, let itemID, let name, let done):cd C
+            var dictionary: [String: String] = [:]
+            if(name != "")
+            {
+                dictionary["name"] = name
+            }
+            if(done != "")
+            {
+                dictionary["done"] = done
+            }
+            return .requestParameters(parameters: dictionary, encoding: URLEncoding.queryString)
         }
     }
 

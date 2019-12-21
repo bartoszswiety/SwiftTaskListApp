@@ -12,12 +12,8 @@ class UserManager {
     var user: User = User.loadFromMemory()
     private var state = States.offline
 
-
-    public func singup(name: String, email: String, password: String, onSuccess: @escaping () -> Void, onError: @escaping (String) -> Void)
-    {
-
-
-        API.request(target: .singUP(name: name, email: email, password: password), success: { (response, data) in
+    public func singup(name: String, email: String, password: String, onSuccess: @escaping () -> Void, onError: @escaping (String) -> Void) {
+        API.request(target: .singUP(name: name, email: email, password: password), success: { _, data in
 
             if let message: String = data["message"] as? String {
                 if let key: String = data["auth_token"] as? String {
@@ -31,12 +27,11 @@ class UserManager {
                 }
             }
             onSuccess()
-        }) { (response, message) in
+        }) { _, message in
             onError(message)
         }
     }
 }
-
 
 extension UserManager {
     public enum States {

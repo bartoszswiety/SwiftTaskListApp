@@ -16,66 +16,43 @@ public class API {
     public let provider = MoyaProvider<FlexHire>()
 }
 
-extension API
-{
+extension API {
     public typealias SuccessCallback = (_ result: Result<Moya.Response, MoyaError>, _ dictionary: [String: Any]) -> Void
     public typealias ErrorCallback = (_ result: Result<Moya.Response, MoyaError>, _ message: String) -> Void
 
-
-    public enum RequestResult
-    {
+    public enum RequestResult {
         case success
         case fail
     }
 
-    public static func request(target: MoyaProvider<FlexHire>.Target, success: @escaping SuccessCallback, error: @escaping ErrorCallback)
-    {
+    public static func request(target: MoyaProvider<FlexHire>.Target, success: @escaping SuccessCallback, error: @escaping ErrorCallback) {
         API.shared.provider.request(target) { result in
-            switch result
-            {
+            switch result {
             case let .success(response):
-                do
-                {
-                    if let text: String = try response.mapString()
-                    {
-                        if let dictionary: [String: Any] = try response.mapDictionary()
-                        {
-                            if(response.statusCode == 200)
-                            {
+                do {
+                    if let text: String = try response.mapString() {
+                        if let dictionary: [String: Any] = try response.mapDictionary() {
+                            if response.statusCode == 200 {
                                 success(result, dictionary)
-                            }
-                            else
-                            {
-                                if let message: String = dictionary["message"] as! String
-                                {
-
-                                    if(message.contains("Signature"))
-                                    {
+                            } else {
+                                if let message: String = dictionary["message"] as! String {
+                                    if message.contains("Signature") {
                                         NotificationCenter.default.post(name: .userError, object: nil)
                                     }
                                     error(result, message)
-                                }
-                                else
-                                {
+                                } else {
                                     error(result, "")
                                 }
                             }
-                        }
-                        else
-                        {
+                        } else {
                             error(result, text)
                         }
-                    }
-                    else
-                    {
+                    } else {
                         error(result, "plaing")
                     }
-                }
-                catch
-                {
-                }
+                } catch {}
                 error(result, "lol")
-            case .failure(_):
+            case .failure:
                 error(result, "")
                 return
             @unknown default:
@@ -86,16 +63,12 @@ extension API
     }
 }
 
-extension API
-{
-    func syncAll()
-    {
-
-    }
+extension API {
+    func syncAll() {}
 }
-
 
 extension Notification.Name {
     static var userError: Notification.Name {
-        return .init(rawValue: "APIUser.error") }
+        return .init(rawValue: "APIUser.error")
+    }
 }
