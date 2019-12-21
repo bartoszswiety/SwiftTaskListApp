@@ -25,46 +25,57 @@ extension API {
         case fail
     }
 
+
+
     public static func request(target: MoyaProvider<FlexHire>.Target, success: @escaping SuccessCallback, error: @escaping ErrorCallback) {
-        API.shared.provider.request(target) { result in
-            switch result {
-            case let .success(response):
-                do {
-                    if let text: String = try response.mapString() {
-                        if let dictionary: [String: Any] = try response.mapDictionary() {
-                            if response.statusCode == 200 {
-                                success(result, dictionary)
-                            } else {
-                                if let message: String = dictionary["message"] as! String {
-                                    if message.contains("Signature") {
-                                        NotificationCenter.default.post(name: .userError, object: nil)
-                                    }
-                                    error(result, message)
+
+        if(UserManager.shared.getState == .online)
+        {
+            API.shared.provider.request(target) { result in
+                switch result {
+                case let .success(response):
+                    do {
+                        if let text: String = try response.mapString() {
+                            if let dictionary: [String: Any] = try response.mapDictionary() {
+                                if response.statusCode == 200 {
+                                    success(result, dictionary)
                                 } else {
-                                    error(result, "")
+                                    if let message: String = dictionary["message"] as! String {
+                                        if message.contains("Signature") {
+                                            UserManager.shared.onApiError()
+                                        }
+                                        error(result, message)
+                                    } else {
+                                        error(result, "")
+                                    }
                                 }
+                            } else {
+                                error(result, text)
                             }
                         } else {
-                            error(result, text)
+                            error(result, "plaing")
                         }
-                    } else {
-                        error(result, "plaing")
-                    }
-                } catch {}
-                error(result, "lol")
-            case .failure:
-                error(result, "")
-                return
-            @unknown default:
-                error(result, "")
-                return
+                    } catch { }
+                    error(result, "lol")
+                case .failure:
+                    error(result, "")
+                    return
+                @unknown default:
+                    error(result, "")
+                    return
+                }
             }
+        }
+        else
+        {
+            error(Result<Moya.Response, MoyaError>.failure(.requestMapping("")), "user")
+            UserManager.shared.onApiError()
         }
     }
 }
 
 extension API {
-    func syncAll() {}
+    func syncAll() { }
 }
 
 extension Notification.Name {

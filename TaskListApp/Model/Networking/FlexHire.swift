@@ -65,7 +65,7 @@ extension FlexHire: TargetType {
             return .requestParameters(parameters: ["name": name, "email": email, "password": password, "password_confirmation": password], encoding: URLEncoding.queryString)
         case let .updateTodo(id, title):
             return .requestParameters(parameters: ["id": id, "title": title], encoding: URLEncoding.queryString)
-        case .updateTodoItem(let parentID, let itemID, let name, let done):cd C
+        case .updateTodoItem(let parentID, let itemID, let name, let done):
             var dictionary: [String: String] = [:]
             if(name != "")
             {

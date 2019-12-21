@@ -10,7 +10,12 @@ import Foundation
 class UserManager {
     static var shared: UserManager = UserManager()
     var user: User = User.loadFromMemory()
-    private var state = States.offline
+    private var state = States.failed
+
+    public func onApiError()
+    {
+        NotificationCenter.default.post(name: .userError, object: nil)
+    }
 
     public func singup(name: String, email: String, password: String, onSuccess: @escaping () -> Void, onError: @escaping (String) -> Void) {
         API.request(target: .singUP(name: name, email: email, password: password), success: { _, data in
@@ -35,15 +40,13 @@ class UserManager {
 
 extension UserManager {
     public enum States {
-        case noAccessToken
-        case offline
+        case failed //No access token, failed requests.
         case online
-        case failed
     }
 
     var getState: States {
         if user.access_key == "" {
-            return .noAccessToken
+            return .failed //Temporary we treat not set user as failed.
         } else {
             return state
         }
