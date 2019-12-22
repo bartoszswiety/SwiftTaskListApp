@@ -11,34 +11,19 @@ import Foundation
 import UIKit
 
 public class TodoManager: NSObject {
+    // MARK: - Preporties
+
     public static var shared: TodoManager = TodoManager()
     public var todos: [Todo] = []
 
-//    public func sync(handler: @escaping ((API.RequestResult, API.SyncResultMessage) -> Void)) {
-//        if UserManager.shared.getState == .noAccessToken {
-//            return handler(.fail, .user)
-//        } else {
-//            print("git")
-//            print(UserManager.shared.user.access_key)
-//            API.shared.provider.request(.todos) { result in
-//                switch result {
-//                case let .success(response):
-//
-//                    print(try! response.mapString())
-//
-//                case let .failure(error):
-//                    print(error)
-//                    return handler(.fail, .user)
-//                }
-//            }
-//        }
-//    }
+    // MARK: - Manager Initalizers
 
     public override init() {
         super.init()
         loadTodosFromCoreData()
     }
 
+    /// Tries to load `Todo` from CoreData
     func loadTodosFromCoreData() {
         let request = NSFetchRequest<Todo>(entityName: "Todo")
         do {
@@ -47,21 +32,39 @@ public class TodoManager: NSObject {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
     }
+}
 
+extension TodoManager {
+    // MARK: - Todo lifecycle
+
+    /// Creates a new local `Todo` and adds it to container.
+    /// Instance is not saved in CoreData!
+    /// Instance is not synced with Cloud!
+    ///
+    /// - returns: Todo 'unnamed' Instance
+    func createTodo() -> Todo {
+        let item = Todo(title: "unnamed")
+        todos.insert(item, at: 0)
+        return item
+    }
+
+    /// Removes `Todo` form container
+    /// Change saved in CoreData&Sync
+    ///
+    /// - parameter index: `Todo` index in `.todos`
     func removeTodo(index: Int) {
         if let todo: Todo = self.todos[index] {
             do {
                 CoreDataStack.contex.delete(todo)
-            } catch {}
+            } catch { }
             todos.remove(at: index)
         }
         save()
     }
 
-    func createTodo() {
-        todos.insert(Todo(title: "unnamed"), at: 0)
-    }
-
+    /// Drops all local `TodoItems`
+    /// Saved in CoreData
+    /// Not synced with Cloud!
     func dropAll() {
         todos = []
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Todo")
@@ -76,9 +79,9 @@ public class TodoManager: NSObject {
         }
     }
 
+    /// Saves all changes in CoreData
     func save() {
         do {
-//            CoreDataStack.contex.c
             try CoreDataStack.contex.save()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
@@ -86,74 +89,78 @@ public class TodoManager: NSObject {
     }
 }
 
-extension Todo {
-    public var todoItems: [TodoItem] {
-        return (items?.allObjects as! [TodoItem]).sorted { (item1, item2) -> Bool in
-            item1.created_at > item2.created_at
+extension TodoManager {
+    // MARK: -Syncing Local with Cloud.
+
+
+    /// Synces `Todo` `title`  with Cloud.
+    /// - Parameter todo: `Todo`
+    public func syncTitle(todo: Todo) {
+        if todo.isSynced {
+            // Update
+            API.request(target: .updateTodo(id: String(todo.id), title: todo.title ?? ""), success: { _, _ in
+                TodoManager.shared.save()
+            }, error: { _, message in
+                print(message)
+            })
+        } else {
+            // Todo has to be created on the Cloud.
+            API.request(target: .addTodo(title: todo.title ?? ""), success: { _, dictionary in
+
+                // We have to sync new Cloud Todo with local.
+                todo.set(dictionary: dictionary)
+
+            }, error: { _, message in
+                print(message)
+            })
+            TodoManager.shared.save()
         }
     }
 
-    public var doneItems: [TodoItem] {
-        return todoItems.filter { (item) -> Bool in
-            item.done
+
+    /// Synces `TodoItem` `name` with Cloud
+    /// Creates a `TodoItem` on cloud if needed
+    /// - Parameter todoItem: `TodoItem`
+    func syncName(todoItem: TodoItem) {
+        if todoItem.isSynced {
+            //We can update
+            API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: todoItem.name, done: ""), success: { (result, dictionary) in
+
+            }, error: { (result, message) in
+            })
+        } else {
+            // TodoItem has to be created on the Cloud
+            API.request(target: .addTodoItem(name: todoItem.name, parentID: String(todoItem.todo_id)), success: { _, dictionary in
+
+                // We have to sync new Cloud TodoItem with local data.
+                todoItem.set(dictionary: dictionary)
+            }, error: { _, _ in
+            })
         }
     }
 
-    func rename(title: String) {
-        self.title = title
-        setValue(title, forKey: "title")
-        syncTitle()
-    }
+    /// Syncs `TodoItem` Done parameter with Cloud
+    /// - Parameter todoItem: TodoItem
+    func syncDone(todoItem: TodoItem)
+    {
+        API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: "", done: String(todoItem.done)), success: { (resutlr, dictionary) in
 
-    func createItem() {
-        addToItems(TodoItem(name: "unnamed", parent: self))
-    }
-
-    func removeItem(index: Int) {
-        removeFromItems(todoItems[index])
-        TodoManager.shared.save()
+        }, error: { (result, message) in
+        })
     }
 }
 
-extension Todo {
-    func set(dictionary: [String: Any]) {
-        if let id: Int64 = dictionary["id"] as? Int64 {
-            self.id = id
-        }
+extension TodoManager
+{
+    //MARK: -Sync cloud with local
 
-        if let created_by: Int64 = dictionary["created_by"] as? Int64 {
-            self.created_by = created_by
-        }
-
-        if let title: String = dictionary["title"] as? String {
-            self.title = title
-        }
-
-        if let created_at: Date = DateFormatter.date(string: dictionary["created_at"] as! String) {
-            self.created_at = created_at
-        }
-
-        if let updated_at: Date = DateFormatter.date(string: dictionary["updated_at"] as! String) {
-            self.updated_at = updated_at
-        }
-    }
-
-    public func syncTitle() {
-        if id != -1 {
-            // Update
-            API.request(target: .updateTodo(id: String(id), title: title!), success: { _, _ in
-                TodoManager.shared.save()
-            }) { _, message in
-                print(message)
-            }
-        } else {
-            // Add
-            API.request(target: .addTodo(title: title ?? ""), success: { _, dictionary in
-                self.set(dictionary: dictionary)
-            }) { _, message in
-                print(message)
-            }
-            TodoManager.shared.save()
-        }
+    func syncAll(onSuccess: @escaping () -> Void, onError: @escaping () -> Void)
+    {
+        API.request(target: .todos,
+                    success: { (result, dictionary) in
+                        onSuccess()
+                    }, error: { (resposne, message) in
+                        onError()
+                    })
     }
 }

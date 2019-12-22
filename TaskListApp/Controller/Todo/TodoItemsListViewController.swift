@@ -26,18 +26,18 @@ class TodoItemsListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            todo?.removeItem(index: indexPath.item)
+            todo?.removeFormItems(index: indexPath.item)
             tableView.reloadData(with: .fade)
         }
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        todo?.todoItems.count ?? 0
+        todo?.itemsSorted.count ?? 0
     }
 
     override func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = TodoItemViewCell()
-        cell.todoItem = todo?.todoItems[indexPath.item]
+        cell.todoItem = todo?.itemsSorted[indexPath.item]
         return cell
     }
 }

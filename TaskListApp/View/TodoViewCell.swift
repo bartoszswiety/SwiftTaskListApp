@@ -24,7 +24,7 @@ class TodoViewCell: UITableViewCell, EditableTextDelegate {
         didSet {
             cardView.setTitle(text: todo?.title ?? "")
             if let data: Todo = todo {
-                cardView.countsLabel.text = String(data.doneItems.count) + "/" + String(data.todoItems.count)
+                cardView.countsLabel.text = String(data.itemsDone.count) + "/" + String(data.itemsSorted.count)
             }
         }
     }
