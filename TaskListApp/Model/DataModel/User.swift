@@ -27,13 +27,19 @@ extension User {
             do {
                 print(data)
                 let user: User = try decoder.decode(User.self, from: data)
+                print("email" + user.email)
                 return user
-            } catch {}
+            } catch { }
+        }
+        else
+        {
+            print("no user first run ")
         }
         return User()
     }
 
     public func save() {
+        print(access_key)
         let data = (try! JSONEncoder().encode(self))
         print(data)
         UserDefaults().set(data, forKey: "user")

@@ -97,8 +97,8 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
 
         UserManager.shared.singup(name: loginField.text!, email: emailField.text!, password: passwordField.text!, onSuccess: {
             self.dismiss(animated: true, completion: nil)
-            API.shared.syncAll()
         }) { message in
+            print("error reported " + message)
             box.removeFromSuperview()
             if message.contains("Password") {
                 self.passwordField.errorHighlight()

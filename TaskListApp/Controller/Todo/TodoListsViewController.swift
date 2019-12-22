@@ -44,6 +44,7 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
         title = "To Do"
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        sync()
 //        todoManager.sync { result, message in
 //            switch result {
 //            case .fail:
@@ -75,5 +76,16 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
 
     @objc func addButonClicked() {
         TodoManager.shared.createTodo()
+    }
+
+    func sync()
+    {
+        let box = createWaitingBox()
+        todoManager.syncAll(onSuccess: {
+            self.tableView.reloadData(with: .fade)
+            box.removeFromSuperview()
+        }) {
+            box.removeFromSuperview()
+        }
     }
 }

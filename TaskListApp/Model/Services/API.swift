@@ -12,51 +12,67 @@ import Moya
 import Result
 
 public class API {
+    //MARK: - Preporties
     public static var shared: API = API()
     public let provider = MoyaProvider<FlexHire>()
+
+//MARK: Initalizer
+
+    init()
+    {
+        print(UserManager.shared.user.email)
+    }
 }
 
+
+
 extension API {
+    //MARK: - Helpers
     public typealias SuccessCallback = (_ result: Result<Moya.Response, MoyaError>, _ dictionary: [String: Any]) -> Void
     public typealias ErrorCallback = (_ result: Result<Moya.Response, MoyaError>, _ message: String) -> Void
 
+    //MARK: - Cloud Requesting
     public enum RequestResult {
         case success
         case fail
     }
 
-
-
-    public static func request(target: MoyaProvider<FlexHire>.Target, success: @escaping SuccessCallback, error: @escaping ErrorCallback) {
-
-        if(UserManager.shared.getState == .online)
-        {
+    public static func request(target: MoyaProvider<FlexHire>.Target, success: @escaping SuccessCallback, error: @escaping ErrorCallback, userRequired: Bool = true) {
+        if ((!userRequired) || (UserManager.shared.getState == .online)) {
             API.shared.provider.request(target) { result in
                 switch result {
                 case let .success(response):
                     do {
                         if let text: String = try response.mapString() {
+                            print(text)
                             if let dictionary: [String: Any] = try response.mapDictionary() {
-                                if response.statusCode == 200 {
+                                print(response.statusCode)
+                                if (response.statusCode == 200) || (response.statusCode == 201) {
                                     success(result, dictionary)
+                                    return
                                 } else {
-                                    if let message: String = dictionary["message"] as! String {
+                                    if let message: String = dictionary["message"] as? String {
                                         if message.contains("Signature") {
-                                            UserManager.shared.onApiError()
+                                            UserManager.shared.invokeApiError()
                                         }
                                         error(result, message)
+                                        return
                                     } else {
                                         error(result, "")
+                                        return
                                     }
                                 }
                             } else {
                                 error(result, text)
+                                return
                             }
                         } else {
                             error(result, "plaing")
+                            return
                         }
                     } catch { }
                     error(result, "lol")
+                    return
                 case .failure:
                     error(result, "")
                     return
@@ -65,11 +81,9 @@ extension API {
                     return
                 }
             }
-        }
-        else
-        {
+        } else {
             error(Result<Moya.Response, MoyaError>.failure(.requestMapping("")), "user")
-            UserManager.shared.onApiError()
+            UserManager.shared.invokeApiError()
         }
     }
 }
@@ -78,8 +92,4 @@ extension API {
     func syncAll() { }
 }
 
-extension Notification.Name {
-    static var userError: Notification.Name {
-        return .init(rawValue: "APIUser.error")
-    }
-}
+
