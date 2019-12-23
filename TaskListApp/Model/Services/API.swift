@@ -12,33 +12,33 @@ import Moya
 import Result
 
 public class API {
-    //MARK: - Preporties
+    // MARK: - Preporties
+
     public static var shared: API = API()
     public let provider = MoyaProvider<FlexHire>()
 
-//MARK: Initalizer
+    // MARK: Initalizer
 
-    init()
-    {
+    init() {
         print(UserManager.shared.user.email)
     }
 }
 
-
-
 extension API {
-    //MARK: - Helpers
+    // MARK: - Helpers
+
     public typealias SuccessCallback = (_ result: Result<Moya.Response, MoyaError>, _ dictionary: [String: Any]) -> Void
     public typealias ErrorCallback = (_ result: Result<Moya.Response, MoyaError>, _ message: String) -> Void
 
-    //MARK: - Cloud Requesting
+    // MARK: - Cloud Requesting
+
     public enum RequestResult {
         case success
         case fail
     }
 
     public static func request(target: MoyaProvider<FlexHire>.Target, success: @escaping SuccessCallback, error: @escaping ErrorCallback, userRequired: Bool = true) {
-        if ((!userRequired) || (UserManager.shared.getState == .online)) {
+        if (!userRequired) || (UserManager.shared.getState != .failed) {
             API.shared.provider.request(target) { result in
                 switch result {
                 case let .success(response):
@@ -91,5 +91,3 @@ extension API {
 extension API {
     func syncAll() { }
 }
-
-

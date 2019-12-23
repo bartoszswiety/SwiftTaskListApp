@@ -9,9 +9,6 @@
 import CoreData
 import Foundation
 
-
-
-
 @objc(TodoItem)
 /// TodoItem is a `Todo` item with additinal  `done` feature.
 ///
@@ -20,8 +17,8 @@ import Foundation
 /// TodoItem can't exists without `Todo` parent which is reflected by `parent_id`
 
 public class TodoItem: NSManagedObject {
+    // MARK: - Initalizer
 
-    //MARK: - Initalizer
     convenience init(name: String, parent: Todo) {
         self.init(entity: NSEntityDescription.entity(forEntityName: "TodoItem", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
         setValue(name, forKey: "name")
@@ -33,7 +30,8 @@ public class TodoItem: NSManagedObject {
 }
 
 extension TodoItem {
-    //MARK: - Preporties
+    // MARK: - Preporties
+
     @nonobjc public class func fetchRequest() -> NSFetchRequest<TodoItem> {
         return NSFetchRequest<TodoItem>(entityName: "TodoItem")
     }
@@ -58,9 +56,8 @@ extension TodoItem {
     }
 }
 
-extension TodoItem
-{
-//MARK: - Edit Methods
+extension TodoItem {
+    // MARK: - Edit Methods
 
     /// Changes a title of the local Todo
     /// -Tries to synces  with Cloud
@@ -75,7 +72,7 @@ extension TodoItem
         self.done = done
         setValue(done, forKey: "done")
         TodoManager.shared.save()
-        //TODO: sync done
+        // TODO: sync done
     }
 }
 

@@ -9,55 +9,42 @@
 import Foundation
 import UIKit
 
-class TodoListViewController: UITableViewController, AddButtonDelegate, TodoViewCellDelegate {
+class TodoListViewController: AddButtonTableViewController {
+    // MARK: Preporties
+
     let todoManager: TodoManager = TodoManager.shared
+    var userButton: UIBarButtonItem?
 
-    func onTodoClick(todo: Todo?) {
-        let vc = TodoItemsListViewController()
-        vc.todo = todo
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            todoManager.removeTodo(index: indexPath.item)
-            tableView.reloadData(with: .fade)
-        }
-    }
-
-    func onClickAddButton() {
-        todoManager.createTodo()
-        if todoManager.todos.count > 5 {
-            todoManager.dropAll()
-        }
-        tableView.reloadData(with: .fade)
-    }
-
-    override func viewDidAppear(_: Bool) {
-        if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController {
-            navigation.addButton.delegate = self
-        }
-        tableView.reloadData()
-    }
+    // MARK: viewDid
 
     override func viewDidLoad() {
         title = "To Do"
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        sync()
-//        todoManager.sync { result, message in
-//            switch result {
-//            case .fail:
-//
-//                switch message {
-//                case .user:
-//                    self.present(UserNavigationController(), animated: true, completion: nil)
-//                }
-//            case .success:
-//                break
-//            }
-//        }
+
+        userButton = UIBarButtonItem(image: UIImage(systemName: "person.circle.fill"), style: .plain, target: self, action: #selector(onClickUserButton))
+        navigationItem.rightBarButtonItem = userButton
+
+        loadApi()
+
+
+        super.viewDidLoad()
     }
+
+    override func viewDidAppear(_: Bool) {
+        tableView.reloadData()
+    }
+
+    // MARK: ADD Button
+
+    override func onClickAddButton() {
+        TodoManager.shared.createTodo()
+        super.onClickAddButton()
+    }
+}
+
+extension TodoListViewController {
+    // MARK: TableView
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         todoManager.todos.count
@@ -74,12 +61,60 @@ class TodoListViewController: UITableViewController, AddButtonDelegate, TodoView
         return cell
     }
 
-    @objc func addButonClicked() {
-        TodoManager.shared.createTodo()
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            todoManager.removeTodo(index: indexPath.item)
+            tableView.reloadData(with: .fade)
+        }
+    }
+}
+
+extension TodoListViewController: TodoViewCellDelegate {
+    // MARK: Click Delegates
+
+    @objc func onClickUserButton() {
+        print("click")
+        if UserManager.shared.getState != .failed {
+            present(UserPageViewController(), animated: true, completion: nil)
+            userButton?.tintColor = .systemBlue
+        } else {
+            // The best way to show user login is invoking error. It's very bad solution and should be temporary
+            UserManager.shared.invokeApiError()
+            // TODO: Show User Login without causing error
+        }
     }
 
-    func sync()
+    func onTodoClick(todo: Todo?) {
+        let vc = TodoItemsListViewController()
+        vc.todo = todo
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension TodoListViewController {
+    // MARK: API
+
+    func loadApi()
     {
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onUserStateChanged), name: .userStateChanged, object: nil)
+
+        sync()
+    }
+
+    @objc func onUserStateChanged() {
+        switch (UserManager.shared.getState)
+        {
+
+        case .failed:
+            userButton?.tintColor = .gray
+        case .online:
+            userButton?.tintColor = .systemBlue
+        case .ready:
+            userButton?.tintColor = .systemBlue
+        }
+    }
+    func sync() {
         let box = createWaitingBox()
         todoManager.syncAll(onSuccess: {
             self.tableView.reloadData(with: .fade)

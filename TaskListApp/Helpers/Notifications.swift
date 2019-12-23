@@ -12,4 +12,9 @@ extension Notification.Name {
     static var userError: Notification.Name {
         return .init(rawValue: "APIUser.error")
     }
+
+    static var userStateChanged: Notification.Name {
+        return .init(rawValue: "APIUser.stateChanged")
+
+    }
 }

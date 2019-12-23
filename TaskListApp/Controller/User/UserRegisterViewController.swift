@@ -43,7 +43,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
     }()
 
     var registerButton: UIButton = {
-        let btn = RoundButton(style: .blue)
+        let btn = RoundButton(style: .blue(radius: 30))
         btn.setTitle("Register", for: .normal)
         return btn
     }()

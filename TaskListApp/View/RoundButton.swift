@@ -11,7 +11,7 @@ import UIKit
 
 class RoundButton: UIButton {
     enum Style {
-        case blue
+        case blue(radius: Float)
         case green
     }
 
@@ -20,8 +20,8 @@ class RoundButton: UIButton {
     convenience init(style: Style) {
         self.init()
         switch style {
-        case .blue:
-            gradient = createStyledGradient(colors: (UIColor(named: "ButtonColorA")!, UIColor(named: "ButtonColorB")!), radius: 30, shadow: true)
+        case let .blue(radius):
+            gradient = createStyledGradient(colors: (UIColor(named: "ButtonColorA")!, UIColor(named: "ButtonColorB")!), radius: radius ?? 30, shadow: true)
             titleLabel?.font = .systemFont(ofSize: 20, weight: .regular)
             setTitleColor(.white, for: .normal)
         default:

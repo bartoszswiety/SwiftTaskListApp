@@ -71,9 +71,8 @@ extension Todo {
     }
 }
 
-extension Todo
-{
-    //MARK: - Edit Methods
+extension Todo {
+    // MARK: - Edit Methods
 
     /// Changes a title of the local Todo
     /// -Tries to synces  with Cloud
@@ -84,11 +83,8 @@ extension Todo
     }
 }
 
-extension Todo
-{
-// MARK: - Item Managment
-
-
+extension Todo {
+    // MARK: - Item Managment
 
     /// Creates local unnamed `TodoItem` and adds to its container.
     /// new `TodoItem` is not synced with Cloud
