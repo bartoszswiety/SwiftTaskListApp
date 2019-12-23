@@ -9,18 +9,21 @@
 import Foundation
 import UIKit
 
-class TodoItemsListViewController: UITableViewController {
+class TodoItemsListViewController: AddButtonTableViewController {
     var todo: Todo?
 
     override func viewDidLoad() {
         title = "Todo"
         title = todo?.title
         tableView.allowsSelection = false
+        navigationItem.largeTitleDisplayMode = .never
+
+        super.viewDidLoad()
     }
 
-    override func viewDidAppear(_: Bool) {
+    override func viewWillAppear(_: Bool) {
         if let navigation: TodoNavigationController = self.navigationController as? TodoNavigationController {
-            navigation.addButton.delegate = self
+//            navigation.userButton.hide()
         }
     }
 
@@ -40,11 +43,9 @@ class TodoItemsListViewController: UITableViewController {
         cell.todoItem = todo?.itemsSorted[indexPath.item]
         return cell
     }
-}
 
-extension TodoItemsListViewController: AddButtonDelegate {
-    func onClickAddButton() {
+    override func onClickAddButton() {
         todo?.createItem()
-        tableView.reloadData(with: .automatic)
+        super.onClickAddButton()
     }
 }

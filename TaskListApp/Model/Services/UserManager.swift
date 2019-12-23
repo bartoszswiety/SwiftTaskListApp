@@ -7,17 +7,29 @@
 //
 
 import Foundation
+import os
 class UserManager {
     // MARK: - Preporties
 
     static var shared: UserManager = UserManager()
-    var user: User = User.loadFromMemory()
-    private var state = States.failed
+    var user: User
+    private var state: States = States.failed
 
-    //MARK: Initalizers
+    // MARK: Initalizers
+    init()
+    {
+        user = User.loadFromMemory()
 
-
-
+        if(user.access_key != "")
+        {
+            //We have some access key, let's mark user as ready
+            state = .ready
+        }
+        else
+        {
+            state = .failed
+        }
+    }
 }
 
 extension UserManager {
@@ -25,26 +37,35 @@ extension UserManager {
 
     /// RIght now we have only two states - let's treat not assigned user as Failed.
     public enum States {
-        case failed // No access token, failed requests.
-        case online // When all set up.
+        case failed /// No access token, failed requests.
+        case online /// When all set up.
+        case ready /// Ready is very similiar to online. It alllows user to make request -  but  state is not verifed with API (Flexhire doesn't have user verification api)
     }
 
     /// - returns: User state basing on access key
-    var getState: States {
-        if user.access_key == "" {
-            return .failed // Temporary we treat not set user as failed.
-        } else {
-            return .online
-        }
+    public var getState: States {
+        return state
     }
 
-    // MARK: - Error Catching
+    func setState(state: States)
+    {
+        if(self.state != state)
+        {
+            //We want to shout event only when state has changed
+            self.state = state
+            NotificationCenter.default.post(name: .userStateChanged, object: state)
+        }
+
+    }
+
+    // MARK: - Events
 
     /// Shouts about critical problems related with API
     /// Posts a need for new user loging
-    public func invokeApiError() {
-        print("on User error")
+    public func invokeApiError(detail: String = "") {
+        OSLog(subsystem: ("onUserError: " + detail), category: "user")
         NotificationCenter.default.post(name: .userError, object: nil)
+        setState(state: .failed)
     }
 }
 
@@ -63,17 +84,15 @@ extension UserManager {
                         self.user.email = email
                         self.user.login = name
                         self.user.access_key = key
+                        self.setState(state: .online)
                         onSuccess()
                         return
-                    }
-                    else
-                    {
+                    } else {
                         onError("format")
                         return
                     }
                 }
             }
-
 
         }, error: { _, message in
             print("shit" + message)
@@ -81,5 +100,12 @@ extension UserManager {
             return
 
         }, userRequired: false)
+    }
+
+
+    public func logout(onSuccess: @escaping () -> Void)
+    {
+        onSuccess()
+        return
     }
 }

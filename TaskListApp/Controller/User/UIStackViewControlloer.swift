@@ -19,14 +19,14 @@ class UIStackViewController: UIViewController {
     }()
 
     override func viewWillAppear(_: Bool) {
-        navigationController!.setToolbarHidden(true, animated: true)
+        navigationController?.setToolbarHidden(true, animated: true)
     }
 
     override func viewDidLoad() {
         view.backgroundColor = .systemBackground
         view.addSubview(stackView)
-        navigationController!.setToolbarHidden(true, animated: true)
-        navigationController!.hidesBottomBarWhenPushed = true
+        navigationController?.setToolbarHidden(true, animated: true)
+        navigationController?.hidesBottomBarWhenPushed = true
 
         let layout = view.layoutMarginsGuide
         var constraints = [stackView.centerXAnchor.constraint(equalTo: layout.centerXAnchor),

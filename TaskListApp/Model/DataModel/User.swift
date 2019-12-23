@@ -30,9 +30,7 @@ extension User {
                 print("email" + user.email)
                 return user
             } catch { }
-        }
-        else
-        {
+        } else {
             print("no user first run ")
         }
         return User()
@@ -44,4 +42,10 @@ extension User {
         print(data)
         UserDefaults().set(data, forKey: "user")
     }
+}
+
+extension User
+{
+
+
 }

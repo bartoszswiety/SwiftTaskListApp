@@ -19,13 +19,13 @@ class UserLandingViewController: UIStackViewController {
     }()
 
     var loginButton: UIButton = {
-        let btn = RoundButton(style: RoundButton.Style.blue)
+        let btn = RoundButton(style: RoundButton.Style.blue(radius: 30))
         btn.setTitle("Login", for: .normal)
         return btn
     }()
 
     var registerButton: UIButton = {
-        let btn = RoundButton(style: RoundButton.Style.blue)
+        let btn = RoundButton(style: RoundButton.Style.blue(radius: 30))
         btn.setTitle("Register", for: .normal)
         return btn
     }()

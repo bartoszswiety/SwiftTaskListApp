@@ -18,7 +18,7 @@ class AddButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setTitle("+", for: .normal)
-        gradient = createStyledGradient(colors: (UIColor.systemBlue, UIColor.systemBlue), radius: 18, shadow: false)
+        gradient = createStyledGradient(colors: (UIColor.systemBlue, UIColor.systemBlue), radius: 32, shadow: false)
         titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         addTarget(self, action: #selector(click), for: .touchUpInside)
     }

@@ -32,7 +32,7 @@ class UserLoginViewController: UIStackViewController, UITextFieldDelegate {
     }()
 
     var loginButton: UIButton = {
-        let btn = RoundButton(style: .blue)
+        let btn = RoundButton(style: .blue(radius: 30))
         btn.setTitle("Login", for: .normal)
         return btn
     }()

@@ -56,7 +56,7 @@ extension TodoManager {
         if let todo: Todo = self.todos[index] {
             do {
                 CoreDataStack.contex.delete(todo)
-            } catch { }
+            } catch {}
             todos.remove(at: index)
         }
         save()
@@ -92,7 +92,6 @@ extension TodoManager {
 extension TodoManager {
     // MARK: -Syncing Local with Cloud.
 
-
     /// Synces `Todo` `title`  with Cloud.
     /// - Parameter todo: `Todo`
     public func syncTitle(todo: Todo) {
@@ -117,16 +116,15 @@ extension TodoManager {
         }
     }
 
-
     /// Synces `TodoItem` `name` with Cloud
     /// Creates a `TodoItem` on cloud if needed
     /// - Parameter todoItem: `TodoItem`
     func syncName(todoItem: TodoItem) {
         if todoItem.isSynced {
-            //We can update
-            API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: todoItem.name, done: ""), success: { (result, dictionary) in
+            // We can update
+            API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: todoItem.name, done: ""), success: { _, _ in
 
-            }, error: { (result, message) in
+            }, error: { _, _ in
             })
         } else {
             // TodoItem has to be created on the Cloud
@@ -141,26 +139,23 @@ extension TodoManager {
 
     /// Syncs `TodoItem` Done parameter with Cloud
     /// - Parameter todoItem: TodoItem
-    func syncDone(todoItem: TodoItem)
-    {
-        API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: "", done: String(todoItem.done)), success: { (resutlr, dictionary) in
+    func syncDone(todoItem: TodoItem) {
+        API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: "", done: String(todoItem.done)), success: { _, _ in
 
-        }, error: { (result, message) in
+        }, error: { _, _ in
         })
     }
 }
 
-extension TodoManager
-{
-    //MARK: -Sync cloud with local
+extension TodoManager {
+    // MARK: -Sync cloud with local
 
-    func syncAll(onSuccess: @escaping () -> Void, onError: @escaping () -> Void)
-    {
+    func syncAll(onSuccess: @escaping () -> Void, onError: @escaping () -> Void) {
         API.request(target: .todos,
-                    success: { (result, dictionary) in
+                    success: { _, _ in
                         onSuccess()
-                    }, error: { (resposne, message) in
+                    }, error: { _, _ in
                         onError()
-                    })
+        })
     }
 }
