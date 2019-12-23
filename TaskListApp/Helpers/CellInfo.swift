@@ -8,9 +8,6 @@
 
 import Foundation
 
-
-
-
 struct InfoCellData {
     var name: String
     var value: String
@@ -20,13 +17,10 @@ struct InfoCellData {
     }
 }
 
-
 struct ButtonCellData {
     var title = ""
 
-
-    init(title: String)
-    {
+    init(title: String) {
         self.title = title
     }
 }

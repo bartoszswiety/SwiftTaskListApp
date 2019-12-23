@@ -32,6 +32,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
+    /// Reloads the whole navifation of rootViewController
+    /// We use it as reset after logout.
+    func reloadTodoNavigation() {
+        UIApplication.shared.keyWindow?.rootViewController = TodoNavigationController()
+    }
+
     func sceneDidDisconnect(_: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

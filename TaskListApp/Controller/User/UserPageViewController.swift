@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 class UserPageViewController: UITableViewController {
-
     var data: [Any] = [
         InfoCellData(name: "state", value: "Online"),
 
         InfoCellData(name: "login", value: UserManager.shared.user.login),
-        InfoCellData(name: "email", value: UserManager.shared.user.email), ButtonCellData(title: "Logout")]
+        InfoCellData(name: "email", value: UserManager.shared.user.email), ButtonCellData(title: "Logout"),
+    ]
 
     override func viewDidLoad() {
         tableView.separatorStyle = .none
@@ -27,15 +27,12 @@ class UserPageViewController: UITableViewController {
     }
 
     override func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        if let info = data[indexPath.item] as? InfoCellData
-        {
+        if let info = data[indexPath.item] as? InfoCellData {
             let cell = InfoCell()
             cell.setInfo(info: info)
             return cell
         }
-        if let button = data[indexPath.item] as? ButtonCellData
-        {
+        if let button = data[indexPath.item] as? ButtonCellData {
             let cell = ButtonCell()
             cell.setButton(info: button)
             cell.delegate = self
@@ -45,18 +42,18 @@ class UserPageViewController: UITableViewController {
     }
 }
 
-extension UserPageViewController: ButtonCellDelegate
-{
+extension UserPageViewController: ButtonCellDelegate {
     func onCellButtonClick() {
-
-
-        let alert = UIAlertController(title: "Are you sure?", message: "Logging out will all your not synced data.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+        let alert = UIAlertController(title: "Are you sure?", message: "You will lost all not synced data.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
 
         }))
 
-        alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: { (alert) in
+        alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: { _ in
             UserManager.shared.logout() {
+                if let delegtate: SceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                    delegtate.reloadTodoNavigation()
+                }
                 self.dismiss(animated: true, completion: nil)
             }
         }))

@@ -16,18 +16,16 @@ class UserManager {
     private var state: States = States.failed
 
     // MARK: Initalizers
-    init()
-    {
+
+    init() {
         user = User.loadFromMemory()
 
-        if(user.access_key != "")
-        {
-            //We have some access key, let's mark user as ready
+        if user.access_key != "" {
+            // We have some access key, let's mark user as ready
+            print("ready!!!")
             state = .ready
-        }
-        else
-        {
-            state = .failed
+        } else {
+            setState(state: .failed)
         }
     }
 }
@@ -47,15 +45,12 @@ extension UserManager {
         return state
     }
 
-    func setState(state: States)
-    {
-        if(self.state != state)
-        {
-            //We want to shout event only when state has changed
+    func setState(state: States) {
+        if self.state != state {
+            // We want to shout event only when state has changed
             self.state = state
             NotificationCenter.default.post(name: .userStateChanged, object: state)
         }
-
     }
 
     // MARK: - Events
@@ -63,7 +58,7 @@ extension UserManager {
     /// Shouts about critical problems related with API
     /// Posts a need for new user loging
     public func invokeApiError(detail: String = "") {
-        OSLog(subsystem: ("onUserError: " + detail), category: "user")
+        OSLog(subsystem: "onUserError: " + detail, category: "user")
         NotificationCenter.default.post(name: .userError, object: nil)
         setState(state: .failed)
     }
@@ -102,9 +97,18 @@ extension UserManager {
         }, userRequired: false)
     }
 
+    /// LogsOut user and drops all memory records
+    /// - Parameter onSuccess: onSuccess description
+    public func logout(onSuccess: @escaping () -> Void) {
+        TodoManager.shared.dropAll()
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+        user = User()
+        setState(state: .failed)
 
-    public func logout(onSuccess: @escaping () -> Void)
-    {
         onSuccess()
         return
     }
