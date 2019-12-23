@@ -9,12 +9,11 @@
 import Foundation
 
 public class User: Codable {
-    public var access_key: String = "elo" {
+    public var access_key: String = "" {
         didSet {
             save()
         }
     }
-
     public var email: String = ""
     public var login: String = ""
 }
@@ -44,8 +43,4 @@ extension User {
     }
 }
 
-extension User
-{
-
-
-}
+extension User { }

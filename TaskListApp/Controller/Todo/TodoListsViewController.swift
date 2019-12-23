@@ -27,7 +27,6 @@ class TodoListViewController: AddButtonTableViewController {
 
         loadApi()
 
-
         super.viewDidLoad()
     }
 
@@ -73,7 +72,7 @@ extension TodoListViewController: TodoViewCellDelegate {
     // MARK: Click Delegates
 
     @objc func onClickUserButton() {
-        print("click")
+        print(UserManager.shared.getState)
         if UserManager.shared.getState != .failed {
             present(UserPageViewController(), animated: true, completion: nil)
             userButton?.tintColor = .systemBlue
@@ -94,18 +93,14 @@ extension TodoListViewController: TodoViewCellDelegate {
 extension TodoListViewController {
     // MARK: API
 
-    func loadApi()
-    {
-
+    func loadApi() {
         NotificationCenter.default.addObserver(self, selector: #selector(onUserStateChanged), name: .userStateChanged, object: nil)
 
         sync()
     }
 
     @objc func onUserStateChanged() {
-        switch (UserManager.shared.getState)
-        {
-
+        switch UserManager.shared.getState {
         case .failed:
             userButton?.tintColor = .gray
         case .online:
@@ -114,6 +109,7 @@ extension TodoListViewController {
             userButton?.tintColor = .systemBlue
         }
     }
+
     func sync() {
         let box = createWaitingBox()
         todoManager.syncAll(onSuccess: {

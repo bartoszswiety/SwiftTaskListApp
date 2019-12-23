@@ -37,9 +37,8 @@ class InfoCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setInfo(info: InfoCellData)
-    {
-        self.nameLabel.text = info.name + ":"
-        self.valueLabel.text = info.value
+    func setInfo(info: InfoCellData) {
+        nameLabel.text = info.name + ":"
+        valueLabel.text = info.value
     }
 }

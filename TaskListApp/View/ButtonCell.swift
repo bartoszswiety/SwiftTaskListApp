@@ -14,10 +14,9 @@ protocol ButtonCellDelegate {
 }
 
 class ButtonCell: UITableViewCell {
-
     var delegate: ButtonCellDelegate?
     var button: RoundButton = {
-        return RoundButton(style: .blue(radius: 10))
+        RoundButton(style: .blue(radius: 10))
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -31,14 +30,11 @@ class ButtonCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-
-    @objc func onClick()
-    {
+    @objc func onClick() {
         delegate?.onCellButtonClick()
     }
 
-    func setButton(info: ButtonCellData)
-    {
-        self.button.setTitle(info.title, for: .normal)
+    func setButton(info: ButtonCellData) {
+        button.setTitle(info.title, for: .normal)
     }
 }

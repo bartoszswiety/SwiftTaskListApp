@@ -15,6 +15,5 @@ extension Notification.Name {
 
     static var userStateChanged: Notification.Name {
         return .init(rawValue: "APIUser.stateChanged")
-
     }
 }

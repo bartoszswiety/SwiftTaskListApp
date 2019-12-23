@@ -73,7 +73,7 @@ extension TodoManager {
 
         do {
             try CoreDataStack.contex.execute(batchDeleteRequest)
-
+            save()
         } catch {
             // Error Handling
         }
