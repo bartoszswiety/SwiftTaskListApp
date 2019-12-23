@@ -48,8 +48,18 @@ class UserPageViewController: UITableViewController {
 extension UserPageViewController: ButtonCellDelegate
 {
     func onCellButtonClick() {
-        UserManager.shared.logout() {
-            self.dismiss(animated: true, completion: nil)
-        }
+
+
+        let alert = UIAlertController(title: "Are you sure?", message: "Logging out will all your not synced data.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+
+        }))
+
+        alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: { (alert) in
+            UserManager.shared.logout() {
+                self.dismiss(animated: true, completion: nil)
+            }
+        }))
+        present(alert, animated: true, completion: nil)
     }
 }
