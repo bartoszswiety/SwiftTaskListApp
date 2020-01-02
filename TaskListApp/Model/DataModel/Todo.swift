@@ -18,7 +18,7 @@ import Moya
 /// Todo class has one required preporerty `title` which is needed for saving into CoreData.
 /// Todo class which is not saved and not synced has `id` = -1
 
-public class Todo: NSManagedObject {
+public class Todo: Syncable {
 //    MARK: - Initalizers
 
     convenience init(title: String) {
@@ -37,12 +37,7 @@ extension Todo {
         return NSFetchRequest<Todo>(entityName: "Todo")
     }
 
-    @NSManaged public var created_at: Date?
     @NSManaged public var created_by: Int64
-    @NSManaged public var id: Int64
-    @NSManaged public var test: Float
-    @NSManaged public var title: String?
-    @NSManaged public var updated_at: Date?
     @NSManaged private var items: NSSet?
 }
 
@@ -63,33 +58,12 @@ extension Todo {
 }
 
 extension Todo {
-//    MARK: - Helpers
-
-    /// Checks if Todo has been synced basing on `id`
-    public var isSynced: Bool {
-        return id != -1
-    }
-}
-
-extension Todo {
-    // MARK: - Edit Methods
-
-    /// Changes a title of the local Todo
-    /// -Tries to synces  with Cloud
-    func rename(title: String) {
-        self.title = title
-        setValue(title, forKey: "title")
-        TodoManager.shared.syncTitle(todo: self)
-    }
-}
-
-extension Todo {
     // MARK: - Item Managment
 
     /// Creates local unnamed `TodoItem` and adds to its container.
     /// new `TodoItem` is not synced with Cloud
     func createItem() -> TodoItem {
-        let item = TodoItem(name: "unnamed", parent: self)
+        let item = TodoItem(title: "unnamed", parent: self)
         addToItems(item)
         return item
     }
@@ -128,25 +102,11 @@ extension Todo {
     /// Change is not saved in CoreData!.
     /// - Parameter dictionary: with preporties names -
     /// ["id", "created_by","title","created-at","updated_at").
-    func set(dictionary: [String: Any]) {
-        if let id: Int64 = dictionary["id"] as? Int64 {
-            self.id = id
-        }
 
+    override func set(dictionary: [String: Any]) {
         if let created_by: Int64 = dictionary["created_by"] as? Int64 {
             self.created_by = created_by
         }
-
-        if let title: String = dictionary["title"] as? String {
-            self.title = title
-        }
-
-        if let created_at: Date = DateFormatter.date(string: dictionary["created_at"] as! String) {
-            self.created_at = created_at
-        }
-
-        if let updated_at: Date = DateFormatter.date(string: dictionary["updated_at"] as! String) {
-            self.updated_at = updated_at
-        }
+        super.set(dictionary: dictionary)
     }
 }

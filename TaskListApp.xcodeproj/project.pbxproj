@@ -29,6 +29,7 @@
 		D1451BE723AFE0E000C4916C /* InfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1451BE623AFE0E000C4916C /* InfoCell.swift */; };
 		D14AADFF239E9DF800BFB898 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14AADFE239E9DF800BFB898 /* Const.swift */; };
 		D14AAE01239EA0D300BFB898 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14AAE00239EA0D300BFB898 /* DateFormatter.swift */; };
+		D168DB8523B5872700990F8D /* Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D168DB8423B5872700990F8D /* Syncable.swift */; };
 		D1801CBB2398F339008A46AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1801CBA2398F339008A46AF /* AppDelegate.swift */; };
 		D1801CBD2398F339008A46AF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1801CBC2398F339008A46AF /* SceneDelegate.swift */; };
 		D1801CC02398F339008A46AF /* TaskListApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D1801CBE2398F339008A46AF /* TaskListApp.xcdatamodeld */; };
@@ -51,6 +52,7 @@
 		D1D3F418239DBF2000673E53 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F417239DBF2000673E53 /* API.swift */; };
 		D1D3F41A239E42EE00673E53 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F419239E42EE00673E53 /* Response.swift */; };
 		D1D3F41C239E481F00673E53 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D3F41B239E481F00673E53 /* RootViewController.swift */; };
+		D1D6CCE823B59B1500A6C169 /* SyncStreamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D6CCE723B59B1500A6C169 /* SyncStreamModel.swift */; };
 		D1FF619F239ABC4600FEBBA4 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF619E239ABC4500FEBBA4 /* R.generated.swift */; };
 		D1FF61A9239ABD7900FEBBA4 /* TodoNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61A8239ABD7900FEBBA4 /* TodoNavigationController.swift */; };
 		D1FF61AC239ABDB600FEBBA4 /* TodoItemsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FF61AB239ABDB600FEBBA4 /* TodoItemsListViewController.swift */; };
@@ -104,6 +106,7 @@
 		D1451BE623AFE0E000C4916C /* InfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCell.swift; sourceTree = "<group>"; };
 		D14AADFE239E9DF800BFB898 /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		D14AAE00239EA0D300BFB898 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		D168DB8423B5872700990F8D /* Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Syncable.swift; sourceTree = "<group>"; };
 		D1801CB72398F339008A46AF /* TaskListApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskListApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1801CBA2398F339008A46AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D1801CBC2398F339008A46AF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -132,6 +135,7 @@
 		D1D3F417239DBF2000673E53 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		D1D3F419239E42EE00673E53 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		D1D3F41B239E481F00673E53 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		D1D6CCE723B59B1500A6C169 /* SyncStreamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStreamModel.swift; sourceTree = "<group>"; };
 		D1FF619E239ABC4500FEBBA4 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = R.generated.swift; path = TaskListApp/Helpers/R.generated.swift; sourceTree = SOURCE_ROOT; };
 		D1FF61A8239ABD7900FEBBA4 /* TodoNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoNavigationController.swift; sourceTree = "<group>"; };
 		D1FF61AB239ABDB600FEBBA4 /* TodoItemsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemsListViewController.swift; sourceTree = "<group>"; };
@@ -269,6 +273,14 @@
 			path = User;
 			sourceTree = "<group>";
 		};
+		D1D6CCE623B59B0300A6C169 /* Target */ = {
+			isa = PBXGroup;
+			children = (
+				D1D3F411239DBE9500673E53 /* FlexHire.swift */,
+			);
+			path = Target;
+			sourceTree = "<group>";
+		};
 		D1FF61A0239ABC5600FEBBA4 /* Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -319,7 +331,8 @@
 		D1FF61A4239ABC9000FEBBA4 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				D1D3F411239DBE9500673E53 /* FlexHire.swift */,
+				D1D6CCE623B59B0300A6C169 /* Target */,
+				D1D6CCE723B59B1500A6C169 /* SyncStreamModel.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -359,6 +372,7 @@
 				D1FF61AF239ABE5800FEBBA4 /* Todo.swift */,
 				D13EB168239D442400B9C943 /* TodoItem.swift */,
 				D1D3F413239DBEBF00673E53 /* User.swift */,
+				D168DB8423B5872700990F8D /* Syncable.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -634,6 +648,7 @@
 			files = (
 				D1D3F400239DA51A00673E53 /* UserNavigationController.swift in Sources */,
 				D123C782239C8CE30037DEB3 /* CardView.swift in Sources */,
+				D168DB8523B5872700990F8D /* Syncable.swift in Sources */,
 				D1D3F40D239DB09100673E53 /* WaitingBox.swift in Sources */,
 				D123C77E239C7E8C0037DEB3 /* TodoListsViewController.swift in Sources */,
 				D1FF61A9239ABD7900FEBBA4 /* TodoNavigationController.swift in Sources */,
@@ -642,6 +657,7 @@
 				D106F165239D4E1A00BEE7E8 /* Gradient.swift in Sources */,
 				D1801CC02398F339008A46AF /* TaskListApp.xcdatamodeld in Sources */,
 				D1D3F41C239E481F00673E53 /* RootViewController.swift in Sources */,
+				D1D6CCE823B59B1500A6C169 /* SyncStreamModel.swift in Sources */,
 				D1D3F414239DBEBF00673E53 /* User.swift in Sources */,
 				D1FF619F239ABC4600FEBBA4 /* R.generated.swift in Sources */,
 				D1801CBB2398F339008A46AF /* AppDelegate.swift in Sources */,

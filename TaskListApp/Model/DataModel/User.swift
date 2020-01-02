@@ -14,6 +14,7 @@ public class User: Codable {
             save()
         }
     }
+
     public var email: String = ""
     public var login: String = ""
 }
@@ -28,7 +29,7 @@ extension User {
                 let user: User = try decoder.decode(User.self, from: data)
                 print("email" + user.email)
                 return user
-            } catch { }
+            } catch {}
         } else {
             print("no user first run ")
         }
@@ -43,4 +44,4 @@ extension User {
     }
 }
 
-extension User { }
+extension User {}

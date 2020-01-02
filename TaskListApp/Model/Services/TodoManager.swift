@@ -56,7 +56,7 @@ extension TodoManager {
         if let todo: Todo = self.todos[index] {
             do {
                 CoreDataStack.contex.delete(todo)
-            } catch {}
+            } catch { }
             todos.remove(at: index)
         }
         save()
@@ -92,70 +92,77 @@ extension TodoManager {
 extension TodoManager {
     // MARK: -Syncing Local with Cloud.
 
-    /// Synces `Todo` `title`  with Cloud.
-    /// - Parameter todo: `Todo`
-    public func syncTitle(todo: Todo) {
-        if todo.isSynced {
+    /// Synces `Syncable`  `title`  with Cloud.
+    /// - Parameter item: `Syncable` item
+    public func syncTitle(item: Syncable) {
+        if item.isSynced {
             // Update
-            API.request(target: .updateTodo(id: String(todo.id), title: todo.title ?? ""), success: { _, _ in
+            var target: FlexHire?
+
+            if let todo = item as? Todo {
+                target = FlexHire.updateTodo(id: String(todo.id), title: todo.title)
+            }
+
+            if let todoItem = item as? TodoItem {
+                target = FlexHire.updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: todoItem.title, done: "")
+            }
+
+            guard target != nil
+                else {
+                    print("ERROR")
+                    return
+            }
+
+            API.request(target: target!, success: { _, _ in
+                item.updateSyncTime()
                 TodoManager.shared.save()
             }, error: { _, message in
                 print(message)
             })
         } else {
             // Todo has to be created on the Cloud.
-            API.request(target: .addTodo(title: todo.title ?? ""), success: { _, dictionary in
+            var target: FlexHire?
+
+            if let todo = item as? Todo {
+                target = FlexHire.addTodo(title: todo.title)
+            }
+
+            if let todoItem = item as? TodoItem {
+                target = FlexHire.addTodoItem(name: todoItem.title, parentID: String(todoItem.todo_id))
+            }
+
+            guard target != nil
+                else {
+                    print("ERROR")
+                    return
+            }
+
+            API.request(target: target!, success: { _, dictionary in
 
                 // We have to sync new Cloud Todo with local.
-                todo.set(dictionary: dictionary)
-
+                item.set(dictionary: dictionary)
+                print("Synced")
             }, error: { _, message in
                 print(message)
             })
             TodoManager.shared.save()
         }
     }
-
-    /// Synces `TodoItem` `name` with Cloud
-    /// Creates a `TodoItem` on cloud if needed
-    /// - Parameter todoItem: `TodoItem`
-    func syncName(todoItem: TodoItem) {
-        if todoItem.isSynced {
-            // We can update
-            API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: todoItem.name, done: ""), success: { _, _ in
-
-            }, error: { _, _ in
-            })
-        } else {
-            // TodoItem has to be created on the Cloud
-            API.request(target: .addTodoItem(name: todoItem.name, parentID: String(todoItem.todo_id)), success: { _, dictionary in
-
-                // We have to sync new Cloud TodoItem with local data.
-                todoItem.set(dictionary: dictionary)
-            }, error: { _, _ in
-            })
-        }
-    }
-
-    /// Syncs `TodoItem` Done parameter with Cloud
-    /// - Parameter todoItem: TodoItem
-    func syncDone(todoItem: TodoItem) {
-        API.request(target: .updateTodoItem(parentID: String(todoItem.todo_id), itemID: String(todoItem.id), name: "", done: String(todoItem.done)), success: { _, _ in
-
-        }, error: { _, _ in
-        })
-    }
 }
+
+
+
 
 extension TodoManager {
     // MARK: -Sync cloud with local
 
     func syncAll(onSuccess: @escaping () -> Void, onError: @escaping () -> Void) {
-        API.request(target: .todos,
-                    success: { _, _ in
-                        onSuccess()
-                    }, error: { _, _ in
-                        onError()
-        })
+        API.request(target: .todos, success: { (result, dictionary) in
+            print(dictionary)
+            onSuccess()
+        }, error: { (result, message) in
+            onError()
+            return
+        }, userRequired: true)
     }
 }

@@ -12,7 +12,7 @@ import UIKit
 class TodoItemViewCell: UITableViewCell {
     public var todoItem: TodoItem? {
         didSet {
-            editableLabel.setText(text: todoItem?.name ?? "")
+            editableLabel.setText(text: todoItem?.title ?? "")
             showStatus()
         }
     }
@@ -47,11 +47,11 @@ class TodoItemViewCell: UITableViewCell {
 
 extension TodoItemViewCell: EditableTextDelegate {
     func onTextEdited(text: String) {
-        todoItem?.rename(name: text)
+        todoItem?.rename(title: text)
     }
 
     func onClick() {
-        let alert = UIAlertController(title: "Details", message: "created:" + todoItem!.created_at.description, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Details", message: "created:" + todoItem!.created_at.description + "\nupdated:" + todoItem!.updated_at .description, preferredStyle: .actionSheet)
 
         window?.rootViewController?.present(alert, animated: true, completion: nil)
 
