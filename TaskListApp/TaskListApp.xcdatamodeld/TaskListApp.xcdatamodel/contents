@@ -4,6 +4,7 @@
         <attribute name="created_at" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="created_by" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="synced_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="test" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
         <attribute name="updated_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -13,13 +14,14 @@
         <attribute name="created_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="done" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" usesScalarValueType="YES"/>
-        <attribute name="name" attributeType="String"/>
+        <attribute name="synced_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
         <attribute name="todo_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="updated_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="todo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Todo" inverseName="items" inverseEntity="Todo"/>
     </entity>
     <elements>
-        <element name="Todo" positionX="162.29296875" positionY="354.3046875" width="128" height="148"/>
-        <element name="TodoItem" positionX="-229.38671875" positionY="167.09765625" width="128" height="148"/>
+        <element name="Todo" positionX="162.29296875" positionY="354.3046875" width="128" height="163"/>
+        <element name="TodoItem" positionX="-229.38671875" positionY="167.09765625" width="128" height="163"/>
     </elements>
 </model>

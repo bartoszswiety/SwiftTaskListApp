@@ -96,6 +96,7 @@ extension TodoListViewController {
     func loadApi() {
         NotificationCenter.default.addObserver(self, selector: #selector(onUserStateChanged), name: .userStateChanged, object: nil)
 
+        //We can try to sync with cloud - it's safe
         sync()
     }
 
@@ -105,8 +106,10 @@ extension TodoListViewController {
             userButton?.tintColor = .gray
         case .online:
             userButton?.tintColor = .systemBlue
+            sync()
         case .ready:
             userButton?.tintColor = .systemBlue
+            sync()
         }
     }
 
