@@ -97,6 +97,31 @@ extension UserManager {
         }, userRequired: false)
     }
 
+    public func login(email: String, password: String, onSuccess: @escaping () -> Void, onError: @escaping (String) -> Void)
+    {
+
+
+        API.request(target: .login(email: email, password: password), success: { (result, data) in
+            if let key: String = data["auth_token"] as? String {
+                if key != "" {
+                    self.user.email = email
+                    self.user.access_key = key
+                    self.setState(state: .online)
+                    onSuccess()
+                    return
+                } else {
+                    onError("format")
+                    return
+                }
+            }
+            onError("No key")
+            return
+        }, error: { (result, message) in
+            onError(message)
+            return
+        }, userRequired: false)
+    }
+
     /// LogsOut user and drops all memory records
     /// - Parameter onSuccess: onSuccess description
     public func logout(onSuccess: @escaping () -> Void) {

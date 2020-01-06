@@ -94,7 +94,7 @@ class UserRegisterViewController: UIStackViewController, UITextFieldDelegate {
 
     @objc func submit() {
         let box = createWaitingBox()
-
+        print("button")
         UserManager.shared.singup(name: loginField.text!, email: emailField.text!, password: passwordField.text!, onSuccess: {
             self.dismiss(animated: true, completion: nil)
         }) { message in
