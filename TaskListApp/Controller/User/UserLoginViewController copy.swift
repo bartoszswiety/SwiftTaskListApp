@@ -52,7 +52,7 @@ class UserLoginViewController: UIStackViewController, UITextFieldDelegate {
 
         emailField.delegate = self
         passwordField.delegate = self
-        loginButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(self.submit), for: .touchUpInside)
 
         NSLayoutConstraint.activate([
             emailField.fullWidthConstraint(), emailField.heightConstraint(),
@@ -80,5 +80,15 @@ class UserLoginViewController: UIStackViewController, UITextFieldDelegate {
 
     @objc func submit() {
         let box = createWaitingBox()
+        UserManager.shared.login(email: emailField.text!, password: passwordField.text!, onSuccess: {
+            self.dismiss(animated: true, completion: nil)
+
+        }, onError: { (message) in
+            box.removeFromSuperview()
+            if message.contains("credentials") {
+                self.emailField.errorHighlight()
+                self.passwordField.errorHighlight()
+            }
+        })
     }
 }
