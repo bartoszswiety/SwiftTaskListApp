@@ -8,6 +8,8 @@
 
 import Foundation
 import os
+import UIKit
+
 class UserManager {
     // MARK: - Preporties
 
@@ -53,6 +55,29 @@ extension UserManager {
         }
     }
 
+    func setUserData(email: String, login: String, key: String)
+    {
+        if((email != "") && (email != email))
+        {
+            //User changed - we should remove all not synced data.
+            /// TODO: Drop User - It's not the best place for that
+            if let currentView: UIViewController = UIApplication.shared.keyWindow?.rootViewController
+            {
+                currentView.presentWarningData(clickHandler: { (ok) in
+                    if(ok)
+                    {
+                        TodoManager.shared.dropAllSynced()
+                    }
+                }, message: "It seems that you have been logged before to another user. Shall I remove all user data?")
+            }
+
+        }
+        self.user.email = email
+        self.user.login = login
+        self.user.access_key = key
+        self.setState(state: .online)
+    }
+
     // MARK: - Events
 
     /// Shouts about critical problems related with API
@@ -76,10 +101,7 @@ extension UserManager {
             if let message: String = data["message"] as? String {
                 if let key: String = data["auth_token"] as? String {
                     if key != "" {
-                        self.user.email = email
-                        self.user.login = name
-                        self.user.access_key = key
-                        self.setState(state: .online)
+                        self.setUserData(email: email, login: name, key: key)
                         onSuccess()
                         return
                     } else {

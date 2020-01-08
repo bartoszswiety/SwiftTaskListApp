@@ -44,19 +44,16 @@ class UserPageViewController: UITableViewController {
 
 extension UserPageViewController: ButtonCellDelegate {
     func onCellButtonClick() {
-        let alert = UIAlertController(title: "Are you sure?", message: "You will lost all not synced data.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-
-        }))
-
-        alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: { _ in
-            UserManager.shared.logout() {
-                if let delegtate: SceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                    delegtate.reloadTodoNavigation()
+        presentWarningData(clickHandler: { (ok) in
+            if(ok)
+            {
+                UserManager.shared.logout() {
+                    if let delegtate: SceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                        delegtate.reloadTodoNavigation()
+                    }
                 }
-                self.dismiss(animated: true, completion: nil)
             }
-        }))
-        present(alert, animated: true, completion: nil)
-    }
-}
+        })
+    } }
+
+

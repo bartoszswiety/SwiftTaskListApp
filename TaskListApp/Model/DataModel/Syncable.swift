@@ -64,14 +64,16 @@ extension Syncable {
 extension Syncable {
 //    MARK: - Helpers
 
-    /// Checks if Todo has been synced basing on `id`
+    /// Checks if Todo has been synced basing on `id` and `update_at`
+    ///
     public var isSynced: Bool {
-        return id != -1
+        return id != -1 && (updated_at <= synced_at ?? created_at)
     }
 
     /// We can update syncTime and updateTime - becasue they contain the same version.
     public func updateSyncTime() {
-        setValue(NSDate(), forKey: "created_at")
+        synced_at = Date()
+
     }
 }
 

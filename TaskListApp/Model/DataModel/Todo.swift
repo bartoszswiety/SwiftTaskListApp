@@ -18,15 +18,39 @@ import Moya
 /// Todo class has one required preporerty `title` which is needed for saving into CoreData.
 /// Todo class which is not saved and not synced has `id` = -1
 
-public class Todo: Syncable {
+public class Todo: Syncable, Decodable {
 //    MARK: - Initalizers
 
+
+
+    /// Creates an instance in persistant Controller.
+    /// - Parameter title: <#title description#>
     convenience init(title: String) {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
         setValue(title, forKey: "title")
         setValue(NSDate(), forKey: "created_at")
         setValue(NSDate(), forKey: "updated_at")
         setValue(-1, forKey: "id")
+    }
+
+
+    //MARK: - JSON
+    enum CodingKeys: String, CodingKey {
+        case title
+        case summary = "description"
+        case link
+        case image = "imageURL"
+        case createdDate = "date"
+    }
+
+    /// Decodes in Temporary Controller.
+    /// - Parameter decoder: <#decoder description#>
+    required convenience public init(from decoder: Decoder) throws {
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.tempContex)
+
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.title = try values.decode(String.self, forKey: .title)
+
     }
 }
 
@@ -39,6 +63,7 @@ extension Todo {
 
     @NSManaged public var created_by: Int64
     @NSManaged private var items: NSSet?
+
 }
 
 extension Todo {

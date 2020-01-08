@@ -62,7 +62,17 @@ extension TodoManager {
         save()
     }
 
-    /// Drops all local `TodoItems`
+    /// Drops all local `Todo` with synced Tag
+    /// We can drop all synced mainly because they are stored on the cloud.
+    func dropAllSynced()
+    {
+        todos.removeAll { (todo) -> Bool in
+            !todo.isSynced
+        }
+        save()
+    }
+
+    /// Drops all local `Todo`
     /// Saved in CoreData
     /// Not synced with Cloud!
     func dropAll() {
@@ -141,6 +151,7 @@ extension TodoManager {
 
                 // We have to sync new Cloud Todo with local.
                 item.set(dictionary: dictionary)
+                item.updateSyncTime()
                 print("Synced")
             }, error: { _, message in
                 print(message)
@@ -158,11 +169,45 @@ extension TodoManager {
 
     func syncAll(onSuccess: @escaping () -> Void, onError: @escaping () -> Void) {
         API.request(target: .todos, success: { (result, dictionary) in
-            print(dictionary)
-            onSuccess()
+
+
+            switch result
+            {
+            case let .success(response):
+
+                do
+                {
+
+                    //Cloud todo are based on temporary Contex
+                    var cloudTodo = try! response.map([Todo].self)
+                    self.merge(cloudTodo: cloudTodo)
+
+                }
+                catch
+                {
+
+                }
+
+
+
+
+            case .failure(_): break
+
+            }
+
+
+
+            onError()
+            return
         }, error: { (result, message) in
             onError()
             return
         }, userRequired: true)
+    }
+
+
+    func merge(cloudTodo: [Todo])
+    {
+
     }
 }
