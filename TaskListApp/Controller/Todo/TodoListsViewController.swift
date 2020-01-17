@@ -39,6 +39,7 @@ class TodoListViewController: AddButtonTableViewController {
     override func onClickAddButton() {
         TodoManager.shared.createTodo()
         super.onClickAddButton()
+//        let td = Todo(ta: "")
     }
 }
 
@@ -96,7 +97,7 @@ extension TodoListViewController {
     func loadApi() {
         NotificationCenter.default.addObserver(self, selector: #selector(onUserStateChanged), name: .userStateChanged, object: nil)
 
-        //We can try to sync with cloud - it's safe
+        // We can try to sync with cloud - it's safe
         sync()
     }
 
@@ -118,8 +119,8 @@ extension TodoListViewController {
         todoManager.syncAll(onSuccess: {
             self.tableView.reloadData(with: .fade)
             box.removeFromSuperview()
-        }) {
+        }, onError: {
             box.removeFromSuperview()
-        }
+        })
     }
 }

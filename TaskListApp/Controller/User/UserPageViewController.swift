@@ -44,16 +44,14 @@ class UserPageViewController: UITableViewController {
 
 extension UserPageViewController: ButtonCellDelegate {
     func onCellButtonClick() {
-        presentWarningData(clickHandler: { (ok) in
-            if(ok)
-            {
-                UserManager.shared.logout() {
+        presentWarningData(clickHandler: { ok in
+            if ok {
+                UserManager.shared.logout {
                     if let delegtate: SceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
                         delegtate.reloadTodoNavigation()
                     }
                 }
             }
         })
-    } }
-
-
+    }
+}

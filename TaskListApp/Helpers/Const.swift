@@ -8,4 +8,10 @@
 
 import Foundation
 
-struct Const {}
+struct Const {
+    public var dateFormat: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ"
+        return dateFormatter
+    }
+}

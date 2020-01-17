@@ -55,27 +55,23 @@ extension UserManager {
         }
     }
 
-    func setUserData(email: String, login: String, key: String)
-    {
-        if((email != "") && (email != email))
-        {
-            //User changed - we should remove all not synced data.
-            /// TODO: Drop User - It's not the best place for that
-            if let currentView: UIViewController = UIApplication.shared.keyWindow?.rootViewController
-            {
-                currentView.presentWarningData(clickHandler: { (ok) in
-                    if(ok)
-                    {
+    func setUserData(email: String, login: String, key: String) {
+        if email != "", email != email {
+            // User changed - we should remove all not synced data.
+            // TODO: Drop User - It's not the best place for that
+            if let currentView: UIViewController = UIApplication.shared.keyWindow?.rootViewController {
+                currentView.presentWarningData(clickHandler: { ok in
+                    if ok {
                         TodoManager.shared.dropAllSynced()
                     }
                 }, message: "It seems that you have been logged before to another user. Shall I remove all user data?")
             }
-
         }
-        self.user.email = email
-        self.user.login = login
-        self.user.access_key = key
-        self.setState(state: .online)
+        user.email = email
+        if login != "" { user.login = login
+        }
+        user.access_key = key
+        setState(state: .online)
     }
 
     // MARK: - Events
@@ -119,15 +115,11 @@ extension UserManager {
         }, userRequired: false)
     }
 
-    public func login(email: String, password: String, onSuccess: @escaping () -> Void, onError: @escaping (String) -> Void)
-    {
-
-
-        API.request(target: .login(email: email, password: password), success: { (result, data) in
+    public func login(email: String, password: String, onSuccess: @escaping () -> Void, onError: @escaping (String) -> Void) {
+        API.request(target: .login(email: email, password: password), success: { _, data in
             if let key: String = data["auth_token"] as? String {
                 if key != "" {
-                    self.user.email = email
-                    self.user.access_key = key
+                    self.setUserData(email: email, login: "", key: key)
                     self.setState(state: .online)
                     onSuccess()
                     return
@@ -138,7 +130,7 @@ extension UserManager {
             }
             onError("No key")
             return
-        }, error: { (result, message) in
+        }, error: { _, message in
             onError(message)
             return
         }, userRequired: false)
@@ -148,13 +140,13 @@ extension UserManager {
     /// - Parameter onSuccess: onSuccess description
     public func logout(onSuccess: @escaping () -> Void) {
         TodoManager.shared.dropAll()
-        let defaults = UserDefaults.standard
-        let dictionary = defaults.dictionaryRepresentation()
-        dictionary.keys.forEach { key in
-            defaults.removeObject(forKey: key)
-        }
-        user = User()
-        setState(state: .failed)
+//        let defaults = UserDefaults.standard
+//        let dictionary = defaults.dictionaryRepresentation()
+//        dictionary.keys.forEach { key in
+//            defaults.removeObject(forKey: key)
+//        }
+//        user = User()
+//        setState(state: .failed)
 
         onSuccess()
         return

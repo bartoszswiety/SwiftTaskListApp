@@ -14,16 +14,17 @@ public class CoreDataStack {
     static var contex: NSManagedObjectContext {
         return shared.persistentContainer.viewContext
     }
-    static var tempContex: NSManagedObjectContext
-    {
+
+    static var tempContex: NSManagedObjectContext {
         return shared.temporaryContainer.viewContext
     }
 
-    lazy var temporaryContainer: NSPersistentContainer =
-            {
-            let container = NSPersistentContainer(name: "TaskListApp")
-            return container
+    lazy var temporaryContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "TaskListApp")
+
+        return container
     }()
+
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {

@@ -45,6 +45,7 @@ extension TodoManager {
     func createTodo() -> Todo {
         let item = Todo(title: "unnamed")
         todos.insert(item, at: 0)
+        save()
         return item
     }
 
@@ -56,7 +57,7 @@ extension TodoManager {
         if let todo: Todo = self.todos[index] {
             do {
                 CoreDataStack.contex.delete(todo)
-            } catch { }
+            } catch {}
             todos.remove(at: index)
         }
         save()
@@ -64,8 +65,7 @@ extension TodoManager {
 
     /// Drops all local `Todo` with synced Tag
     /// We can drop all synced mainly because they are stored on the cloud.
-    func dropAllSynced()
-    {
+    func dropAllSynced() {
         todos.removeAll { (todo) -> Bool in
             !todo.isSynced
         }
@@ -104,7 +104,8 @@ extension TodoManager {
 
     /// Synces `Syncable`  `title`  with Cloud.
     /// - Parameter item: `Syncable` item
-    public func syncTitle(item: Syncable) {
+    public func sync(item: Syncable) {
+        save()
         if item.isSynced {
             // Update
             var target: FlexHire?
@@ -118,13 +119,13 @@ extension TodoManager {
             }
 
             guard target != nil
-                else {
-                    print("ERROR")
-                    return
+            else {
+                print("ERROR")
+                return
             }
 
             API.request(target: target!, success: { _, _ in
-                item.updateSyncTime()
+                item.setSyncTime()
                 TodoManager.shared.save()
             }, error: { _, message in
                 print(message)
@@ -142,16 +143,16 @@ extension TodoManager {
             }
 
             guard target != nil
-                else {
-                    print("ERROR")
-                    return
+            else {
+                print("ERROR")
+                return
             }
 
             API.request(target: target!, success: { _, dictionary in
 
                 // We have to sync new Cloud Todo with local.
                 item.set(dictionary: dictionary)
-                item.updateSyncTime()
+                item.setSyncTime()
                 print("Synced")
             }, error: { _, message in
                 print(message)
@@ -161,53 +162,87 @@ extension TodoManager {
     }
 }
 
-
-
-
 extension TodoManager {
     // MARK: -Sync cloud with local
 
     func syncAll(onSuccess: @escaping () -> Void, onError: @escaping () -> Void) {
-        API.request(target: .todos, success: { (result, dictionary) in
+        API.request(target: .todos, success: { result, _ in
 
-
-            switch result
-            {
+            switch result {
             case let .success(response):
 
-                do
-                {
-
-                    //Cloud todo are based on temporary Contex
-                    var cloudTodo = try! response.map([Todo].self)
-                    self.merge(cloudTodo: cloudTodo)
-
+                do {
+                    // Cloud todo are based on temporary Contex
+                    var cloudTodo = try response.map([Todo].self)
+                    self.merge(cloudTodos: cloudTodo)
+                    self.save()
+                    onSuccess()
+                    return
+                } catch { print("Can't map it")
+                    onError()
+                    return
                 }
-                catch
-                {
 
-                }
-
-
-
-
-            case .failure(_): break
-
+            case .failure: break
             }
-
-
 
             onError()
             return
-        }, error: { (result, message) in
+        }, error: { _, _ in
             onError()
             return
         }, userRequired: true)
     }
 
+    /// Merges cloud todos with local.
+    /// - Parameter cloudTodos: <#cloudTodos description#>
+    func merge(cloudTodos: [Todo]) {
+        for todo in cloudTodos {
+            if let existing: Todo = todos.first(where: { (x) -> Bool in
+                x.title == todo.title
+            }) {
+                // Okay we have two tasks with the same name - what we should do?
 
-    func merge(cloudTodo: [Todo])
-    {
+                // Firstly let's check if it has been synced.
+                if !existing.isSynced {
+                    // That's really bad something with the same name and not synced.
+                    if existing.itemsSorted.count > 0 {
+                        // Even worse it has tasks...
+                        // Let's sync it.
+                        existing.sync()
+                    } else {
+                        // Same name no tasks? Remove it.
+                        let index = todos.firstIndex(of: existing) ?? -1
+                        if index > 0 {
+                            removeTodo(index: index)
+                        }
+                    }
+                }
+            } else {
+                print(todo.title)
 
+                print(todo.created_at.description)
+
+                for item in todo.itemsSorted {
+                    CoreDataStack.contex.insert(item)
+                }
+
+                CoreDataStack.contex.insert(todo)
+
+                todos.insert(todo, at: 0)
+            }
+        }
+    }
+}
+
+extension Todo {
+    // That's a core sync function which tries to add it and all it's not synced items.
+    public func sync() {
+        TodoManager.shared.sync(item: self)
+        for item in itemsSorted {
+            if !item.isSynced {
+                TodoManager.shared.sync(item: item)
+            }
+        }
     }
 }

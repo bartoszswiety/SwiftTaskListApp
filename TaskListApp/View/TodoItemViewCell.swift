@@ -12,7 +12,9 @@ import UIKit
 class TodoItemViewCell: UITableViewCell {
     public var todoItem: TodoItem? {
         didSet {
-            editableLabel.setText(text: todoItem?.title ?? "")
+            if let todo = todoItem {
+                editableLabel.setText(text: todo.title + todo.todo_id.description)
+            }
             showStatus()
         }
     }
@@ -51,7 +53,12 @@ extension TodoItemViewCell: EditableTextDelegate {
     }
 
     func onClick() {
-        let alert = UIAlertController(title: "Details", message: "created:" + todoItem!.created_at.description + "\nupdated:" + todoItem!.updated_at .description, preferredStyle: .actionSheet)
+        var sync = "no"
+        if let date = todoItem!.synced_at {
+            sync = date.description
+        }
+
+        let alert = UIAlertController(title: "Details", message: "created:" + todoItem!.created_at.description + "\nupdated:" + todoItem!.updated_at.description + "\nsynced_at" + sync + "\nsynced:" + String(todoItem!.isSynced), preferredStyle: .actionSheet)
 
         window?.rootViewController?.present(alert, animated: true, completion: nil)
 

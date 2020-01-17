@@ -9,14 +9,10 @@
 import Foundation
 import UIKit
 
-
-
-extension UIViewController
-{
+extension UIViewController {
     /// Shows warining prompt with OK and CANCEL
     /// - Parameter clickHandler: escaping when user interactied alert
-    func presentWarningData(clickHandler: @escaping((Bool) -> Void), message: String = "You will lost all not synced data.")
-    {
+    func presentWarningData(clickHandler: @escaping ((Bool) -> Void), message: String = "You will lost all not synced data.") {
         let alert = UIAlertController(title: "Are you sure?", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             clickHandler(false)
@@ -26,10 +22,7 @@ extension UIViewController
 
             clickHandler(true)
             self.dismiss(animated: true, completion: nil)
-        }
-        ))
+        }))
         present(alert, animated: true, completion: nil)
     }
-
-
 }

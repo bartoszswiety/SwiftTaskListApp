@@ -21,8 +21,6 @@ import Moya
 public class Todo: Syncable, Decodable {
 //    MARK: - Initalizers
 
-
-
     /// Creates an instance in persistant Controller.
     /// - Parameter title: <#title description#>
     convenience init(title: String) {
@@ -33,24 +31,36 @@ public class Todo: Syncable, Decodable {
         setValue(-1, forKey: "id")
     }
 
-
-    //MARK: - JSON
-    enum CodingKeys: String, CodingKey {
-        case title
-        case summary = "description"
-        case link
-        case image = "imageURL"
-        case createdDate = "date"
+    convenience init(entnity: NSEntityDescription) {
+        self.init(entity: entnity, insertInto: CoreDataStack.contex)
     }
 
-    /// Decodes in Temporary Controller.
+    convenience init(ta _: String) {
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.contex)
+        setValue("Siema", forKey: "title")
+    }
+
+    // MARK: - JSON
+
+    /// Decodes in Temporary Controller.`
     /// - Parameter decoder: <#decoder description#>
-    required convenience public init(from decoder: Decoder) throws {
-        self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: CoreDataStack.tempContex)
+    public required convenience init(from decoder: Decoder) throws {
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Todo", in: CoreDataStack.contex)!, insertInto: nil)
 
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        self.title = try values.decode(String.self, forKey: .title)
+        try set(values: values)
 
+        title = try values.decode(String.self, forKey: .title)
+
+        let a = try values.decodeSafelyArray(of: TodoItem.self, forKey: .items)
+
+        addToItems(NSSet(array: a))
+    }
+
+    public override func set(values: KeyedDecodingContainer<Syncable.CodingKeys>) throws {
+        try super.set(values: values)
+
+        title = try values.decode(String.self, forKey: .title)
     }
 }
 
@@ -63,7 +73,6 @@ extension Todo {
 
     @NSManaged public var created_by: Int64
     @NSManaged private var items: NSSet?
-
 }
 
 extension Todo {
@@ -89,7 +98,9 @@ extension Todo {
     /// new `TodoItem` is not synced with Cloud
     func createItem() -> TodoItem {
         let item = TodoItem(title: "unnamed", parent: self)
+
         addToItems(item)
+
         return item
     }
 

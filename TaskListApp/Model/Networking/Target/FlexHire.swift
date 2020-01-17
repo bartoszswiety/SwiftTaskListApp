@@ -21,7 +21,7 @@ public enum FlexHire {
 
 extension FlexHire: TargetType {
     public var baseURL: URL { return URL(string:
-            "https://todos.flexhire.com/")! }
+        "https://todos.flexhire.com/")! }
 
     public var token: String {
         return UserManager.shared.user.access_key
