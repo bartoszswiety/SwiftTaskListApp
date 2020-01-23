@@ -49,22 +49,60 @@ extension TodoManager {
         return item
     }
 
-    /// Removes `Todo` form container
-    /// Change saved in CoreData&Sync
-    ///
-    /// - parameter index: `Todo` index in `.todos`
-    func removeTodo(index: Int) {
-        if let todo: Todo = self.todos[index] {
-            do {
-                CoreDataStack.contex.delete(todo)
-            } catch {}
-            todos.remove(at: index)
+    func getTodo(id: Int64) -> Todo? {
+        return todos.first { (todo) -> Bool in
+            todo.id == id
         }
-        save()
     }
 
-    /// Drops all local `Todo` with synced Tag
-    /// We can drop all synced mainly because they are stored on the cloud.
+    func getIndex(item: Syncable) -> Int
+    {
+        if let todo = item as? Todo {
+            return todos.firstIndex(of: todo) ?? -1
+        }
+        return -1
+    }
+
+
+
+    func remove(item: Syncable, sync: Bool = false)
+    {
+        if(sync)
+        {
+            var target: FlexHire?
+
+            if let todo = item as? Todo {
+                target = FlexHire.deleteTodo(id: todo.id.description)
+                CoreDataStack.contex.delete(todo)
+                todos.remove(at: getIndex(item: todo))
+                save()
+                //TODO: Check if items has been deleted - they should becasue of relation, but who knows what CoreData thinks ;)
+            }
+
+            if let todoItem = item as? TodoItem {
+                target = FlexHire.deleteTodoItem(itemID: todoItem.id.description, parentID: todoItem.todo_id.description)
+                todoItem.parent!.removeFromItems(todoItem)
+                CoreDataStack.contex.delete(todoItem)
+                save()
+            }
+
+            guard target != nil
+                else {
+                    print("ERROR")
+                    return
+            }
+
+            API.request(target: target!, success: { _, _ in
+                print("deleted")
+                TodoManager.shared.save()
+            }, error: { _, message in
+                print(message)
+            })
+        }
+    }
+
+/// Drops all local `Todo` with synced Tag
+/// We can drop all synced mainly because they are stored on the cloud.
     func dropAllSynced() {
         todos.removeAll { (todo) -> Bool in
             !todo.isSynced
@@ -72,9 +110,9 @@ extension TodoManager {
         save()
     }
 
-    /// Drops all local `Todo`
-    /// Saved in CoreData
-    /// Not synced with Cloud!
+/// Drops all local `Todo`
+/// Saved in CoreData
+/// Not synced with Cloud!
     func dropAll() {
         todos = []
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Todo")
@@ -89,7 +127,7 @@ extension TodoManager {
         }
     }
 
-    /// Saves all changes in CoreData
+/// Saves all changes in CoreData
     func save() {
         do {
             try CoreDataStack.contex.save()
@@ -106,7 +144,50 @@ extension TodoManager {
     /// - Parameter item: `Syncable` item
     public func sync(item: Syncable) {
         save()
-        if item.isSynced {
+        if (!item.isCreatedOnCloud) {
+            // Todo has to be created on the Cloud.
+            var target: FlexHire?
+
+            var updated: Todo?
+            if let todo = item as? Todo {
+                target = FlexHire.addTodo(title: todo.title)
+                updated = todo
+            }
+
+            if let todoItem = item as? TodoItem {
+                target = FlexHire.addTodoItem(name: todoItem.title, parentID: String(todoItem.todo_id))
+                updated = todoItem.parent
+            }
+
+            guard target != nil
+                else {
+                    print("ERROR")
+                    return
+            }
+
+            API.request(target: target!, success: { _, dictionary in
+
+                // We have to sync new Cloud Todo with local.
+
+                updated?.set(dictionary: dictionary)
+                item.setSyncTime()
+                print("Synced")
+            }, error: { _, message in
+                print(message)
+            })
+            TodoManager.shared.save()
+        }
+        else
+        {
+            //Okay what if item exists?
+            syncName(item: item)
+        }
+    }
+
+
+    public func syncName(item: Syncable)
+    {
+        if item.isCreatedOnCloud {
             // Update
             var target: FlexHire?
 
@@ -119,9 +200,9 @@ extension TodoManager {
             }
 
             guard target != nil
-            else {
-                print("ERROR")
-                return
+                else {
+                    print("ERROR")
+                    return
             }
 
             API.request(target: target!, success: { _, _ in
@@ -131,33 +212,26 @@ extension TodoManager {
                 print(message)
             })
         } else {
-            // Todo has to be created on the Cloud.
-            var target: FlexHire?
+            //We have to create it
+            sync(item: item)
+        }
+    }
 
-            if let todo = item as? Todo {
-                target = FlexHire.addTodo(title: todo.title)
-            }
-
-            if let todoItem = item as? TodoItem {
-                target = FlexHire.addTodoItem(name: todoItem.title, parentID: String(todoItem.todo_id))
-            }
-
-            guard target != nil
-            else {
-                print("ERROR")
-                return
-            }
-
-            API.request(target: target!, success: { _, dictionary in
-
-                // We have to sync new Cloud Todo with local.
-                item.set(dictionary: dictionary)
+    public func syncDone(item: TodoItem) {
+        //We really don't want to update a task which is not on the cloud.
+        if(item.id > 0)
+        {
+            print(item.todo_id.description + " " + item.id.description)
+            API.request(target: .updateTodoItem(parentID: item.todo_id.description, itemID: item.id.description, name: item.title, done: String(item.done)), success: { (result, data) in
                 item.setSyncTime()
-                print("Synced")
-            }, error: { _, message in
-                print(message)
+            }, error: { (result, error) in
+                //TODO: Handle SyncDone Error
             })
-            TodoManager.shared.save()
+        }
+        else
+        {
+            sync(item: item)
+            //TODO: Sync mark after adding item;
         }
     }
 }
@@ -209,13 +283,10 @@ extension TodoManager {
                     if existing.itemsSorted.count > 0 {
                         // Even worse it has tasks...
                         // Let's sync it.
-                        existing.sync()
+//                        existing.sync()
                     } else {
                         // Same name no tasks? Remove it.
-                        let index = todos.firstIndex(of: existing) ?? -1
-                        if index > 0 {
-                            removeTodo(index: index)
-                        }
+                        remove(item: existing, sync: false)
                     }
                 }
             } else {
@@ -244,5 +315,13 @@ extension Todo {
                 TodoManager.shared.sync(item: item)
             }
         }
+    }
+}
+
+
+extension TodoItem
+{
+    var parent: Todo? {
+        return TodoManager.shared.getTodo(id: todo_id)
     }
 }

@@ -63,7 +63,7 @@ extension TodoListViewController {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            todoManager.removeTodo(index: indexPath.item)
+            todoManager.remove(item: todoManager.todos[indexPath.item], sync: true)
             tableView.reloadData(with: .fade)
         }
     }

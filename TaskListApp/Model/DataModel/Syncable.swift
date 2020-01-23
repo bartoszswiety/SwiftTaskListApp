@@ -31,9 +31,9 @@ public class Syncable: NSManagedObject {
         super.setValue(value, forKey: key)
 
         guard key != "updated_at"
-        else {
-            // No need to add trigget to update_at
-            return
+            else {
+                // No need to add trigget to update_at
+                return
         }
         setValue(NSDate(), forKey: "updated_at")
     }
@@ -66,6 +66,7 @@ extension Syncable {
     @objc func set(dictionary: [String: Any]) {
         if let id: Int64 = dictionary["id"] as? Int64 {
             self.id = id
+            print("id:" + id.description)
         }
 
         if let title: String = dictionary["title"] as? String {
@@ -89,6 +90,11 @@ extension Syncable {
     ///
     public var isSynced: Bool {
         return id != -1 && (updated_at <= synced_at ?? created_at)
+    }
+
+    public var isCreatedOnCloud: Bool
+    {
+        return id != -1
     }
 
     /// We can update syncTime and updateTime - becasue they contain the same version.

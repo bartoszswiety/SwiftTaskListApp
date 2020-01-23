@@ -60,6 +60,8 @@ extension TodoItem {
 
     /// Reflects TODO parent
     @NSManaged public var todo_id: Int64
+
+
 }
 
 extension TodoItem {
@@ -71,7 +73,8 @@ extension TodoItem {
     public func mark(done: Bool = true) {
 //        self.done = done
         setValue(done, forKey: "done")
-        TodoManager.shared.save()
+        TodoManager.shared.syncDone(item: self)
+//        TodoManager.shared.save()
         // TODO: sync done
     }
 }

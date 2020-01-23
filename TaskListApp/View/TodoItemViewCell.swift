@@ -13,7 +13,7 @@ class TodoItemViewCell: UITableViewCell {
     public var todoItem: TodoItem? {
         didSet {
             if let todo = todoItem {
-                editableLabel.setText(text: todo.title + todo.todo_id.description)
+                editableLabel.setText(text: todo.title + todo.id.description)
             }
             showStatus()
         }

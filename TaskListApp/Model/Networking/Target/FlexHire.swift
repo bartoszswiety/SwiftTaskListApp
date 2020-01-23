@@ -17,11 +17,13 @@ public enum FlexHire {
     case addTodoItem(name: String, parentID: String)
     case updateTodo(id: String, title: String)
     case updateTodoItem(parentID: String, itemID: String, name: String = "", done: String = "")
+    case deleteTodo(id: String)
+    case deleteTodoItem(itemID: String, parentID: String)
 }
 
 extension FlexHire: TargetType {
     public var baseURL: URL { return URL(string:
-        "https://todos.flexhire.com/")! }
+            "https://todos.flexhire.com/")! }
 
     public var token: String {
         return UserManager.shared.user.access_key
@@ -37,6 +39,10 @@ extension FlexHire: TargetType {
         case let .addTodoItem(name, parentID): return "todos/" + parentID + "/items"
         case let .updateTodoItem(parentID, itemID, name, done):
             return "todos/" + parentID + "/items/" + itemID
+        case let .deleteTodo(id):
+            return"todos/" + id
+        case let.deleteTodoItem(itemID, parentID):
+            return "todos/" + parentID + "/items/" + itemID
         }
     }
 
@@ -49,6 +55,8 @@ extension FlexHire: TargetType {
         case .updateTodo: return .patch
         case .addTodoItem: return .post
         case .updateTodoItem: return .patch
+        case .deleteTodo: return .delete
+        case .deleteTodoItem: return .delete
         }
     }
 
@@ -61,8 +69,12 @@ extension FlexHire: TargetType {
         case let .addTodo(title):
             return .requestParameters(parameters: ["title": title], encoding: URLEncoding.queryString)
         case let .addTodoItem(name, parentID):
-            return .requestParameters(parameters: ["name": name, "todo_id": parentID, "done": "false"], encoding: URLEncoding.queryString)
+            return .requestParameters(parameters: ["name": name, "done": "false"], encoding: URLEncoding.queryString)
         case .todos:
+            return .requestPlain
+        case .deleteTodo:
+            return .requestPlain
+        case .deleteTodoItem:
             return .requestPlain
         case let .singUP(name, email, password):
             return .requestParameters(parameters: ["name": name, "email": email, "password": password, "password_confirmation": password], encoding: URLEncoding.queryString)
@@ -79,6 +91,7 @@ extension FlexHire: TargetType {
                 dictionary["done"] = done
             }
             return .requestParameters(parameters: dictionary, encoding: URLEncoding.queryString)
+
         }
     }
 

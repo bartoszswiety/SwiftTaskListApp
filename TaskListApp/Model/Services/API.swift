@@ -39,6 +39,7 @@ extension API {
 
     public static func request(target: MoyaProvider<FlexHire>.Target, success: @escaping SuccessCallback, error: @escaping ErrorCallback, userRequired: Bool = true) {
         print(UserManager.shared.getState)
+        print(target.path)
         if (!userRequired) || (UserManager.shared.getState != .failed) {
             API.shared.provider.request(target) { result in
                 switch result {
@@ -71,7 +72,7 @@ extension API {
                             error(result, "plaing")
                             return
                         }
-                    } catch {}
+                    } catch { }
                     error(result, "lol")
                     return
                 case .failure:
@@ -90,5 +91,5 @@ extension API {
 }
 
 extension API {
-    func syncAll() {}
+    func syncAll() { }
 }
